@@ -16,13 +16,22 @@ export class Storage extends Task {
             return true
 
         // get list of unfilled spawns, extensions and towers
-        const storageStructures = room.find<StructureSpawn>(FIND_MY_STRUCTURES,
+        const storageStructures: Structure[] = room.find<StructureSpawn>(FIND_MY_STRUCTURES,
             {filter: s => {
                return s.structureType === STRUCTURE_SPAWN
                 || s.structureType === STRUCTURE_EXTENSION
                 || s.structureType === STRUCTURE_TOWER}
             }).filter(spawn => spawn.store[RESOURCE_ENERGY] !== spawn.store.getCapacity(RESOURCE_ENERGY))
-
+            .sort((a, b) => {
+                function structToNum(s: Structure): number {
+                    if (s.structureType === STRUCTURE_SPAWN)
+                        return 2
+                    if (s.structureType === STRUCTURE_EXTENSION)
+                        return 1
+                    return 0
+                }
+                return structToNum(b) - structToNum(a)
+            })
 
         // already running filler tasks
         const runningFillerTasks: Task[] = _.range(0, MAX_NUM_FILLER)
@@ -31,6 +40,7 @@ export class Storage extends Task {
             .map(t => t as Task)
 
         for (const spawn of storageStructures) {
+            // @ts-ignore
             if (spawn.store[RESOURCE_ENERGY] !== spawn.store.getCapacity()) {
                 for (let i = 0; i < MAX_NUM_FILLER; i++) {
                     const taskId = this.getFillerTaskId(i)
