@@ -13,6 +13,7 @@ export class GetEnergy extends Task {
 
         const resourceDrops = creep.room.find(FIND_DROPPED_RESOURCES,
             { filter: r => r.resourceType === RESOURCE_ENERGY })
+            .sort((a, b) => b.pos.getRangeTo(creep.pos) - a.pos.getRangeTo(creep.pos))
         if (resourceDrops.length === 0) {
             console.log("Failed to get energy: no resources found")
             return true

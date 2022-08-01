@@ -30,7 +30,6 @@ export class SourceHarvest extends Task {
             if (!this.shouldSkipSource(room, source)) {
                 this.spawnTaskForSource(room, source)
             }
-            break // TODO: increase sources with energy usage
         }
 
         return true
