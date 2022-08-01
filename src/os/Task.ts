@@ -107,4 +107,17 @@ export abstract class Task {
             this.suspended = true
         return task
     }
+
+    ipcSend(receiverId: string, message: any) {
+        const receiver = this.kernel.findTaskById(receiverId)
+        if (!receiver)
+            console.log("Failed to send msg via ipc: receiver does not exist")
+        else
+            receiver.ipcReceive(this.id, message)
+    }
+
+    ipcReceive(senderId: string, message: any): boolean {
+        return true
+    }
+
 }

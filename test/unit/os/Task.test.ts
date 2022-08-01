@@ -1,6 +1,6 @@
-import {Kernel} from "../../..//src/os/Kernel";
-import {Task} from "../../..//src/os/Task";
-import {taskMap} from "../../..//src/tasks/taskMap"
+import {Kernel} from "../../../src/os/Kernel";
+import {Task} from "../../../src/os/Task";
+import {taskMap} from "../../../src/tasks/taskMap"
 
 class TestTask extends Task {
     type = "TestTask"
@@ -98,4 +98,19 @@ it("should not suspend after unsuccessful forking", () => {
     )
     expect(result).toBeUndefined()
     expect(myTask.suspended).not.toBeTruthy()
+})
+
+it("should send and receive ipc messages", () => {
+    const myTask = testTask()
+    myTask.kernel.addTask(myTask)
+    let messageReceived = jest.fn()
+    let senderIdReceived = jest.fn()
+    // @ts-ignore
+    myTask.ipcReceive = (senderId: string, message: any): boolean => {
+        senderIdReceived(senderId)
+        messageReceived(message)
+    }
+    myTask.ipcSend(myTask.id, {messageBody: "qwert"})
+    expect(messageReceived).toBeCalledWith({messageBody: "qwert"})
+    expect(senderIdReceived).toBeCalledWith(myTask.id)
 })
