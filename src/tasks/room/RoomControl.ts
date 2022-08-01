@@ -17,7 +17,7 @@ export class RoomControl extends Task {
         const id = "roomstrat-" + room.name
         switch (rcl) {
             case 0:
-                console.log("Room control has no valid stratgy for rcl 0")
+                console.log("Room control has no valid strategy for rcl 0")
                 break
             case 1:
                 this.fork(
