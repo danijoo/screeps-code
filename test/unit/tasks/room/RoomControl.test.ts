@@ -1,8 +1,8 @@
 import {mockGlobal, mockInstanceOf} from "screeps-jest"
-import {Kernel} from "../../../..//src/os/Kernel"
-import {GrowingRoomStrategy} from "../../../..//src/tasks/room/GrowingRoomStrategy"
-import {PioneerRoomStrategy} from "../../../..//src/tasks/room/PioneerRoomStrategy"
-import {RoomControl} from "../../../..//src/tasks/room/RoomControl"
+import {Kernel} from "../../../../src/os/Kernel"
+import {RoomControl} from "../../../../src/tasks/room/RoomControl"
+import {GrowingRoomStrategy} from "../../../../src/tasks/room/strategies/GrowingRoomStrategy"
+import {PioneerRoomStrategy} from "../../../../src/tasks/room/strategies/PioneerRoomStrategy"
 
 let task: RoomControl
 let kernel: Kernel

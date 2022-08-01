@@ -1,7 +1,7 @@
-import {CreepController} from "../../creeps/creepController";
-import {Task} from "../../os/Task";
-import {TASK_CREEP_ROLE_PIONEER, TASK_ROOM_STRATEGY_PIONEER} from "../taskNames";
-import {PRIORITY_ROLE_PIONEER} from "../taskPriorities";
+import {CreepController} from "../../../creeps/creepController";
+import {Task} from "../../../os/Task";
+import {TASK_CREEP_ROLE_PIONEER, TASK_ROOM_STRATEGY_PIONEER} from "../../taskNames";
+import {PRIORITY_ROLE_PIONEER} from "../../taskPriorities";
 import requestCreep = CreepController.requestCreep;
 import CreepRequest = CreepController.CreepRequest;
 

@@ -1,10 +1,10 @@
 import {mockGlobal, mockInstanceOf} from "screeps-jest"
-import { Storage } from "../../../..//src/tasks/room/Storage"
-import {Kernel} from "../../../..//src/os/Kernel"
-import {ControllerUpgrade} from "../../../..//src/tasks/room/ControllerUpgrade"
-import {GrowingRoomStrategy} from "../../../..//src/tasks/room/GrowingRoomStrategy"
-import {SourceHarvest} from "../../../..//src/tasks/room/SourceHarvest"
-import {TowerControl} from "../../../..//src/tasks/room/TowerControl"
+import {Kernel} from "../../../../../src/os/Kernel"
+import {ControllerUpgrade} from "../../../../../src/tasks/room/ControllerUpgrade"
+import {SourceHarvest} from "../../../../../src/tasks/room/SourceHarvest"
+import {Storage} from "../../../../../src/tasks/room/Storage"
+import {GrowingRoomStrategy} from "../../../../../src/tasks/room/strategies/GrowingRoomStrategy"
+import {TowerControl} from "../../../../../src/tasks/room/TowerControl"
 
 let task: GrowingRoomStrategy
 let kernel: Kernel

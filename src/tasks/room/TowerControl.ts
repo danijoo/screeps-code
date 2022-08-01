@@ -1,8 +1,8 @@
 import {Task} from "../../os/Task"
-import {TASK_TOWER_CONTROL} from "../taskNames"
+import {TASK_ROOM_TOWER_CONTROL} from "../taskNames"
 
 export class TowerControl extends Task {
-    readonly type: string = TASK_TOWER_CONTROL
+    readonly type: string = TASK_ROOM_TOWER_CONTROL
 
     // @ts-ignore
     hostileCreeps: Creep[]

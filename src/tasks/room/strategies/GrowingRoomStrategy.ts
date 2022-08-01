@@ -1,17 +1,16 @@
-import {Task} from "../../os/Task"
+import {Task} from "../../../os/Task"
 import {
     TASK_ROOM_STORAGE,
     TASK_ROOM_CONTROLLER_UPGRADE,
     TASK_ROOM_SOURCE_HARVEST,
     TASK_ROOM_STRATEGY_GROWING,
-    TASK_TOWER_CONTROL
-} from "../taskNames"
+    TASK_ROOM_TOWER_CONTROL
+} from "../../taskNames"
 import {
-    PRIORITY_ROOM_STORAGE,
-    PRIORITY_ROOM_CONTROLLER_UPGRADE,
-    PRIORITY_ROOM_SOURCE_HARVEST,
-    PRIORITY_TOWER_CONTROL
-} from "../taskPriorities"
+  PRIORITY_ROOM_STORAGE,
+  PRIORITY_ROOM_CONTROLLER_UPGRADE,
+  PRIORITY_ROOM_SOURCE_HARVEST, PRIORITY_ROOM_TOWER_CONTROL,
+} from "../../taskPriorities"
 
 export class GrowingRoomStrategy extends Task {
     readonly type: string = TASK_ROOM_STRATEGY_GROWING
@@ -25,9 +24,9 @@ export class GrowingRoomStrategy extends Task {
 
         if (room.controller && room.controller.level >= 3) {
             this.fork(
-                TASK_TOWER_CONTROL,
+                TASK_ROOM_TOWER_CONTROL,
                 "towerCtrl",
-                PRIORITY_TOWER_CONTROL,
+                PRIORITY_ROOM_TOWER_CONTROL,
                 {roomName: room.name}
             )
         }

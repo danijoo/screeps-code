@@ -9,10 +9,10 @@ import {UpgraderRole} from "./creeps/UpgraderRole"
 import {TowerControl} from "./room/TowerControl"
 import {ControllerUpgrade} from "./room/ControllerUpgrade"
 import {SourceHarvest} from "./room/SourceHarvest"
-import {FreeCreeps} from "./system/FreeCreeps";
+import {FreeCreeps} from "./global/FreeCreeps";
 import {Init} from "./Init";
 import {RoomControl} from "./room/RoomControl";
-import {PioneerRoomStrategy} from "./room/PioneerRoomStrategy";
+import {PioneerRoomStrategy} from "./room/strategies/PioneerRoomStrategy";
 import {Storage} from "./room/Storage";
 import {
     TASK_CREEP_ACTION_BUILD_STRUCTURE, TASK_CREEP_ACTION_GET_ENERGY,
@@ -26,10 +26,10 @@ import {
     TASK_ROOM_CONTROL, TASK_ROOM_CONTROLLER_UPGRADE, TASK_ROOM_SOURCE_HARVEST,
     TASK_ROOM_STORAGE, TASK_ROOM_STRATEGY_GROWING,
     TASK_ROOM_STRATEGY_PIONEER,
-    TASK_SYSTEM_FREE_CREEPS, TASK_TOWER_CONTROL
+    TASK_SYSTEM_FREE_CREEPS, TASK_ROOM_TOWER_CONTROL
 } from "./taskNames"
 import { BuildStructure } from "./creeps/actions/BuildStructure";
-import { GrowingRoomStrategy } from "./room/GrowingRoomStrategy";
+import { GrowingRoomStrategy } from "./room/strategies/GrowingRoomStrategy";
 import { HarvesterRole } from "./creeps/HarvesterRole";
 
 
@@ -42,6 +42,7 @@ export const taskMap: {[type: string]: any} = {
     [TASK_ROOM_STORAGE]: Storage,
     [TASK_ROOM_SOURCE_HARVEST]: SourceHarvest,
     [TASK_ROOM_CONTROLLER_UPGRADE]: ControllerUpgrade,
+    [TASK_ROOM_TOWER_CONTROL]: TowerControl,
     [TASK_CREEP_ROLE_PIONEER]: PioneerRole,
     [TASK_CREEP_ROLE_FILLER]: StoreFillerRole,
     [TASK_CREEP_ROLE_BUILDER]: BuilderRole,
@@ -52,5 +53,4 @@ export const taskMap: {[type: string]: any} = {
     [TASK_CREEP_ACTION_TRANSFER_ENERGY]: TransferEnergy,
     [TASK_CREEP_ACTION_BUILD_STRUCTURE]: BuildStructure,
     [TASK_CREEP_ACTION_GET_ENERGY]: GetEnergy,
-    [TASK_TOWER_CONTROL]: TowerControl
 }

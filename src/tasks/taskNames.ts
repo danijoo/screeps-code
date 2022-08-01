@@ -9,9 +9,7 @@ export const TASK_ROOM_STRATEGY_GROWING = "Room/Strategy/Growing"
 export const TASK_ROOM_STORAGE = "Room/Proc/Storage"
 export const TASK_ROOM_SOURCE_HARVEST = "Room/Proc/SrcHarvest"
 export const TASK_ROOM_CONTROLLER_UPGRADE = "Room/Proc/CtrlUpgrade"
-
-// misc
-export const TASK_TOWER_CONTROL = "Room/Proc/TowerCtrl"
+export const TASK_ROOM_TOWER_CONTROL = "Room/Proc/TowerCtrl"
 
 // creep roles
 export const TASK_CREEP_ROLE_FILLER = "Creep/Role/Filler"
