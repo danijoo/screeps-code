@@ -1,7 +1,7 @@
-import {Task} from "../../os/Task"
 import {TASK_ROOM_TOWER_CONTROL} from "../taskNames"
+import {RoomTask} from "./RoomTask"
 
-export class TowerControl extends Task {
+export class TowerControl extends RoomTask {
     readonly type: string = TASK_ROOM_TOWER_CONTROL
 
     // @ts-ignore
@@ -15,13 +15,7 @@ export class TowerControl extends Task {
     // @ts-ignore
     repairableDefense: Structure[]
 
-    _run(): boolean {
-        const room = Game.rooms[this.data.roomName]
-        if (!room) {
-            console.log("Room not found")
-            return true
-        }
-
+    runWithRoom(room: Room): boolean {
         const towers: StructureTower[] = room.find<StructureTower>(FIND_MY_STRUCTURES,
             {filter: s => s.structureType === STRUCTURE_TOWER})
 

@@ -1,22 +1,16 @@
 import {CreepController} from "../../creeps/creepController"
-import {Task} from "../../os/Task"
 import {TASK_CREEP_ROLE_HARVESTER, TASK_ROOM_SOURCE_HARVEST} from "../taskNames"
 import {PRIORITY_ROLE_HARVESTER} from "../taskPriorities"
+import {RoomTask} from "./RoomTask"
 import requestCreep = CreepController.requestCreep
 import CreepRequest = CreepController.CreepRequest
 
 const MAX_RESOURCE_PILE_WITHOUT_CONTAINER = 1500
 
-export class SourceHarvest extends Task {
+export class SourceHarvest extends RoomTask {
     readonly type: string = TASK_ROOM_SOURCE_HARVEST
 
-    _run(): boolean {
-        const room = Game.rooms[this.data.roomName]
-        if (!room) {
-            console.log("Room not found")
-            return true
-        }
-
+    runWithRoom(room: Room): boolean {
         const sources = room.find(FIND_SOURCES).filter(s => !room.memory.sources[s.id].ignored)
         const spawns = room.find(FIND_MY_STRUCTURES)
         if (spawns.length > 0) {

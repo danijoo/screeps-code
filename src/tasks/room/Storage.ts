@@ -1,20 +1,17 @@
 import {CreepController} from "../../creeps/creepController";
 import {Task} from "../../os/Task";
 import {TASK_CREEP_ROLE_FILLER, TASK_ROOM_STORAGE} from "../taskNames";
+import {RoomTask} from "./RoomTask"
 import CreepRequest = CreepController.CreepRequest;
 import requestCreep = CreepController.requestCreep;
 
 const MAX_NUM_FILLER = 3
 const MAX_NUM_FILLER_PER_STRUCTURE = 3
 
-export class Storage extends Task {
+export class Storage extends RoomTask {
     type = TASK_ROOM_STORAGE
 
-    _run(): boolean {
-        const room = Game.rooms[this.data.roomName]
-        if (!room)
-            return true
-
+    runWithRoom(room: Room): boolean {
         // get list of unfilled spawns, extensions and towers
         const storageStructures: Structure[] = room.find<StructureSpawn>(FIND_MY_STRUCTURES,
             {filter: s => {

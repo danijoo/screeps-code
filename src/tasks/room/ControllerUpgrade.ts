@@ -1,23 +1,17 @@
 import {CreepController} from "../../creeps/creepController"
-import {Task} from "../../os/Task"
 import {uuid} from "../../utils/uuid"
 import {TASK_CREEP_ROLE_UPGRADER, TASK_ROOM_CONTROLLER_UPGRADE} from "../taskNames"
 import {PRIORITY_ROLE_UPGRADER} from "../taskPriorities"
+import {RoomTask} from "./RoomTask"
 import CreepRequest = CreepController.CreepRequest
 import requestCreep = CreepController.requestCreep
 
 const MAX_NUM_UPGRADER_CREEPS = 1
 
-export class ControllerUpgrade extends Task {
+export class ControllerUpgrade extends RoomTask {
     readonly type: string = TASK_ROOM_CONTROLLER_UPGRADE
 
-    _run(): boolean {
-        const room = Game.rooms[this.data.roomName]
-        if (!room) {
-            console.log("Room not found")
-            return true
-        }
-
+    runWithRoom(room: Room): boolean {
         const controller = room.controller
         if (!controller) {
             console.log("Controller not found")

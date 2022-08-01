@@ -1,4 +1,3 @@
-import {Task} from "../../../os/Task"
 import {
     TASK_ROOM_STORAGE,
     TASK_ROOM_CONTROLLER_UPGRADE,
@@ -11,17 +10,12 @@ import {
   PRIORITY_ROOM_CONTROLLER_UPGRADE,
   PRIORITY_ROOM_SOURCE_HARVEST, PRIORITY_ROOM_TOWER_CONTROL,
 } from "../../taskPriorities"
+import {RoomTask} from "../RoomTask"
 
-export class GrowingRoomStrategy extends Task {
+export class GrowingRoomStrategy extends RoomTask {
     readonly type: string = TASK_ROOM_STRATEGY_GROWING
 
-    _run(): boolean {
-        const room = Game.rooms[this.data.roomName]
-        if (!room) {
-            console.log("Room not found")
-            return true
-        }
-
+    runWithRoom(room: Room): boolean {
         if (room.controller && room.controller.level >= 3) {
             this.fork(
                 TASK_ROOM_TOWER_CONTROL,
