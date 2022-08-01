@@ -9,11 +9,15 @@ beforeEach(() => {
     mockResource = mockInstanceOf<Resource<RESOURCE_ENERGY>>({
         id: "resourceid",
         resourceType: RESOURCE_ENERGY,
-        amount: 1000
+        amount: 1000,
+        pos: mockInstanceOf<RoomPosition>({
+            getRangeTo: () => 5
+        })
     })
     mockCreep = mockInstanceOf<Creep>({
         moveTo: () => OK,
         pickup: () => OK,
+        pos: new RoomPosition(5, 5, "roomName"),
         store: {
             getFreeCapacity: () => 0
         },
@@ -93,5 +97,42 @@ it("should continue if pickup was OK and storage space is left",() => {
     mockCreep.store.getFreeCapacity = () => 10
     task.run()
     expect(mockCreep.pickup).toHaveBeenCalledTimes(1)
+    expect(task.finished).not.toBeTruthy()
+})
+
+it("should pickup from closest resource pile", () => {
+    const closeResource = mockInstanceOf<Resource<RESOURCE_ENERGY>>({
+        id: "resourceIdCloser",
+        resourceType: RESOURCE_ENERGY,
+        amount: 1000,
+        pos: mockInstanceOf<RoomPosition>({
+            getRangeTo: () => 3
+        })
+    })
+    mockCreep.room.find = () => {return [mockResource, closeResource]}
+    // @ts-ignore
+    mockCreep.store.getFreeCapacity = () => {return 50}
+    task.run()
+    expect(mockCreep.pickup).toHaveBeenCalledTimes(1)
+    expect(mockCreep.pickup).toHaveBeenCalledWith(closeResource)
+    expect(task.finished).not.toBeTruthy()
+})
+
+it("should ignore small resource piles if there are bigger deposits", () => {
+    mockResource.amount = 5
+    const largeResource = mockInstanceOf<Resource<RESOURCE_ENERGY>>({
+        id: "resourceIdLarge",
+        resourceType: RESOURCE_ENERGY,
+        amount: 70,
+        pos: mockInstanceOf<RoomPosition>({
+            getRangeTo: () => 20
+        })
+    })
+    mockCreep.room.find = () => {return [mockResource, largeResource]}
+    // @ts-ignore
+    mockCreep.store.getFreeCapacity = () => {return 50}
+    task.run()
+    expect(mockCreep.pickup).toHaveBeenCalledTimes(1)
+    expect(mockCreep.pickup).toHaveBeenCalledWith(largeResource)
     expect(task.finished).not.toBeTruthy()
 })

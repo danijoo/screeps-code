@@ -42,9 +42,19 @@ export class GetEnergy extends Task {
     }
 
     findResource(creep: Creep): Resource | undefined {
-        const resourceDrops = creep.room.find(FIND_DROPPED_RESOURCES,
+        let resourceDrops = creep.room.find(FIND_DROPPED_RESOURCES,
             { filter: r => r.resourceType === RESOURCE_ENERGY })
-            .sort((a, b) => a.pos.getRangeTo(creep.pos) - b.pos.getRangeTo(creep.pos))
+        if (resourceDrops.length > 1) {
+            let sizeSortedResources = resourceDrops.sort((a, b) => a.amount - b.amount)
+            let requiredSize = creep.store.getFreeCapacity()
+            if (sizeSortedResources[0].amount < requiredSize) {
+                let largeResources = sizeSortedResources.filter(r => r.amount >= requiredSize)
+                if (largeResources.length > 0) {
+                    resourceDrops = largeResources
+                }
+            }
+        }
+        resourceDrops = resourceDrops.sort((a, b) => a.pos.getRangeTo(creep.pos) - b.pos.getRangeTo(creep.pos))
         if (resourceDrops.length > 0)
             return resourceDrops[0]
         return undefined
