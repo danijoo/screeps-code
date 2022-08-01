@@ -14,7 +14,7 @@ export class RoomControl extends Task {
             return true
 
         const rcl = room.controller?.level ?? 0
-        const id = "roomstrat" + room.name
+        const id = "roomstrat-" + room.name
         switch (rcl) {
             case 0:
                 console.log("Room control has no valid stratgy for rcl 0")
