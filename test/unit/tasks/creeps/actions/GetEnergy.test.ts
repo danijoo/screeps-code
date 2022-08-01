@@ -1,12 +1,13 @@
 import {mockGlobal, mockInstanceOf} from "screeps-jest";
-import {Kernel} from "../../../../..//src/os/Kernel";
-import {GetEnergy} from "../../../../..//src/tasks/creeps/actions/GetEnergy"
+import {Kernel} from "../../../../../src/os/Kernel";
+import {GetEnergy} from "../../../../../src/tasks/creeps/actions/GetEnergy"
 
 let mockResource: Resource<RESOURCE_ENERGY>
 let mockCreep: Creep
 let task: GetEnergy
 beforeEach(() => {
     mockResource = mockInstanceOf<Resource<RESOURCE_ENERGY>>({
+        id: "resourceid",
         resourceType: RESOURCE_ENERGY,
         amount: 1000
     })
