@@ -5,12 +5,12 @@ export class UpgradeController extends Task {
     type = TASK_CREEP_ACTION_UPGRADE_CONTROLLER
 
     _run(): boolean {
-        const controller = Game.getObjectById<StructureController>(this.data?.controllerId)
+        const controller = Game.getObjectById<StructureController>(this.data.controllerId)
         if (!controller) {
             console.log("Failed to upgrade controller: controller not found")
             return true
         }
-        const creep = Game.getObjectById<Creep>(this.data?.creepId)
+        const creep = Game.getObjectById<Creep>(this.data.creepId)
         if (!creep) {
             console.log("Failed to upgrade controller: creep not found")
             return true

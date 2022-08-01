@@ -11,7 +11,7 @@ export class SourceHarvest extends Task {
     readonly type: string = TASK_ROOM_SOURCE_HARVEST
 
     _run(): boolean {
-        const room = Game.rooms[this.data?.roomName]
+        const room = Game.rooms[this.data.roomName]
         if (!room) {
             console.log("Room not found")
             return true

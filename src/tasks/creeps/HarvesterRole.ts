@@ -5,16 +5,16 @@ export class HarvesterRole extends CreepTask {
     readonly type: string = TASK_CREEP_ROLE_HARVESTER
 
     _runWithCreep(creep: Creep): boolean {
-        const source = Game.getObjectById<Source>(this.data?.sourceId)
+        const source = Game.getObjectById<Source>(this.data.sourceId)
         if (!source) {
             console.log("Source not found")
             return true
         }
 
         let harvesterPosition: RoomPosition
-        if (this.data?.harvesterPosition) {
+        if (this.data.harvesterPosition) {
             // @ts-ignore
-            harvesterPosition = source.room.getPositionAt(...this.data?.harvesterPosition)
+            harvesterPosition = source.room.getPositionAt(...this.data.harvesterPosition)
         } else {
             console.log("No harvest position given!")
             return true

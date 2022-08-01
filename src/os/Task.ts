@@ -19,7 +19,7 @@ export abstract class Task {
     // if boolean, marks the task as suspened. If number, suspend the task for this many ticks
     suspended: boolean | number
 
-    data?: TaskData | null
+    data: TaskData
 
     constructor(id: string,
                 parent: Task | null,
@@ -31,7 +31,7 @@ export abstract class Task {
         this.id = id
         this.parent = parent ?? undefined
         this.priority = priority
-        this.data = data ?? undefined
+        this.data = data ?? {}
         this.kernel = kernel
         this.wakeParent = wakeParent ?? false
         this.suspended = suspended ?? false

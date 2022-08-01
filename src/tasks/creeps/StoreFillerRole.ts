@@ -9,10 +9,10 @@ export class StoreFillerRole extends CreepTask {
     type = TASK_CREEP_ROLE_FILLER
 
     _runWithCreep(creep: Creep): boolean {
-        const structure = Game.getObjectById<Structure>(this.data?.structureId);
+        const structure = Game.getObjectById<Structure>(this.data.structureId);
         // @ts-ignore
         if (!structure || structure.store.getFreeCapacity(RESOURCE_ENERGY) === 0) {
-            console.log(`${this.id} aborted: structure ${this.data!.structureId} not found or already full.`)
+            console.log(`${this.id} aborted: structure ${this.data.structureId} not found or already full.`)
             return true
         }
 

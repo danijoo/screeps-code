@@ -11,7 +11,7 @@ export class Storage extends Task {
     type = TASK_ROOM_STORAGE
 
     _run(): boolean {
-        const room = this.data? Game.rooms[this.data.roomName] : null
+        const room = Game.rooms[this.data.roomName]
         if (!room)
             return true
 

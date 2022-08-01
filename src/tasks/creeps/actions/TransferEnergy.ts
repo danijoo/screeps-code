@@ -5,12 +5,12 @@ export class TransferEnergy extends Task {
     type = TASK_CREEP_ACTION_TRANSFER_ENERGY
 
     _run(): boolean {
-        const structure = Game.getObjectById<Structure>(this.data?.structureId)
+        const structure = Game.getObjectById<Structure>(this.data.structureId)
         if (!structure) {
             console.log("Failed to upgrade controller: controller not found")
             return true
         }
-        const creep = Game.getObjectById<Creep>(this.data?.creepId)
+        const creep = Game.getObjectById<Creep>(this.data.creepId)
         if (!creep) {
             console.log("Failed to upgrade controller: creep not found")
             return true

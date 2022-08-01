@@ -16,7 +16,7 @@ export class PioneerRoomStrategy extends Task {
     type = TASK_ROOM_STRATEGY_PIONEER
 
     _run(): boolean {
-        const room = Game.rooms[this.data?.roomName]
+        const room = Game.rooms[this.data.roomName]
         const controller = room.controller
         const sources: Source[] = room.find(FIND_SOURCES)
         if (!controller || sources.length === 0) {

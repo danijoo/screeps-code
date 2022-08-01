@@ -16,7 +16,7 @@ export class TowerControl extends Task {
     repairableDefense: Structure[]
 
     _run(): boolean {
-        const room = Game.rooms[this.data?.roomName]
+        const room = Game.rooms[this.data.roomName]
         if (!room) {
             console.log("Room not found")
             return true

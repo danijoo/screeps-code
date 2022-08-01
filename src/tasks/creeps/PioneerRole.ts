@@ -5,13 +5,13 @@ export class PioneerRole extends CreepTask {
     type = TASK_CREEP_ROLE_PIONEER
 
     _runWithCreep(creep: Creep): boolean {
-        if (this.data?.upgradeStarted) {
+        if (this.data.upgradeStarted) {
             return true
         }
 
-        const controller = Game.getObjectById<StructureController>(this.data?.controllerId)
+        const controller = Game.getObjectById<StructureController>(this.data.controllerId)
         if (!controller) {
-            console.log(`${this.id} aborted: controller ${this.data?.controllerId} not found.`)
+            console.log(`${this.id} aborted: controller ${this.data.controllerId} not found.`)
             return true
         }
 
@@ -35,7 +35,7 @@ export class PioneerRole extends CreepTask {
                 this.priority,
                 { creepId: creep.id, controllerId: controller.id },
                 true)
-            this.data!.upgradeStarted = true
+            this.data.upgradeStarted = true
         }
 
         return false

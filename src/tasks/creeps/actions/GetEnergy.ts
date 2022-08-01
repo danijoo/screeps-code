@@ -5,17 +5,17 @@ export class GetEnergy extends Task {
     readonly type: string = TASK_CREEP_ACTION_GET_ENERGY
 
     _run(): boolean {
-        const creep = Game.getObjectById<Creep>(this.data?.creepId)
+        const creep = Game.getObjectById<Creep>(this.data.creepId)
         if (!creep) {
             console.log("Failed to get energy: creep not found")
             return true
         }
 
-        let resourceDrop: Resource | null = Game.getObjectById<Resource>(this.data?.resourceId)
+        let resourceDrop: Resource | null = Game.getObjectById<Resource>(this.data.resourceId)
         if (!resourceDrop) {
             resourceDrop = this.findResource(creep) ?? null
             if (resourceDrop)
-                this.data!.resourceId = resourceDrop.id
+                this.data.resourceId = resourceDrop.id
             else {
                 console.log("Failed to get energy: no resources found")
                 return true

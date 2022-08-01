@@ -23,7 +23,7 @@ export abstract class CreepTask extends Task {
     }
 
     getCreep(): Creep | null {
-        return Game.getObjectById<Creep>(this.data?.creepId)
+        return Game.getObjectById<Creep>(this.data.creepId)
     }
 
 

@@ -10,9 +10,9 @@ export class BuilderRole extends CreepTask {
 
     _runWithCreep(creep: Creep): boolean {
         console.log("Builder role started")
-        const constructionSite = Game.getObjectById<ConstructionSite>(this.data?.constructionSiteId)
+        const constructionSite = Game.getObjectById<ConstructionSite>(this.data.constructionSiteId)
         if (!constructionSite) {
-            console.log(`${this.id} aborted: structure ${this.data!.constructionSiteId} not found or already full.`)
+            console.log(`${this.id} aborted: structure ${this.data.constructionSiteId} not found or already full.`)
             return true
         }
 

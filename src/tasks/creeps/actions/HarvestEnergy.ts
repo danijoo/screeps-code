@@ -5,12 +5,12 @@ export class HarvestEnergy extends Task {
     type = TASK_CREEP_ACTION_HARVEST_ENERGY
 
     _run(): boolean {
-        const source = Game.getObjectById<Source>(this.data?.sourceId)
+        const source = Game.getObjectById<Source>(this.data.sourceId)
         if (!source) {
             console.log("Failed to harvest energy: source not found")
             return true
         }
-        const creep = Game.getObjectById<Creep>(this.data?.creepId)
+        const creep = Game.getObjectById<Creep>(this.data.creepId)
         if (!creep) {
             console.log("Failed to harvest energy: creep not found")
             return true

@@ -16,7 +16,7 @@ export class GrowingRoomStrategy extends Task {
     readonly type: string = TASK_ROOM_STRATEGY_GROWING
 
     _run(): boolean {
-        const room = Game.rooms[this.data?.roomName]
+        const room = Game.rooms[this.data.roomName]
         if (!room) {
             console.log("Room not found")
             return true
