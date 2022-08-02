@@ -1,6 +1,7 @@
 import {CreepController} from "../../creeps/creepController";
 import {Task} from "../../os/Task";
 import {TASK_CREEP_ROLE_FILLER, TASK_ROOM_STORAGE} from "../taskNames";
+import {PRIORITY_ROLE_FILLER} from "../taskPriorities"
 import {RoomTask} from "./RoomTask"
 import CreepRequest = CreepController.CreepRequest;
 import requestCreep = CreepController.requestCreep;
@@ -61,7 +62,7 @@ export class Storage extends RoomTask {
                         const task = this.fork(
                             TASK_CREEP_ROLE_FILLER,
                             this.getFillerTaskId(i),
-                            this.priority,
+                            PRIORITY_ROLE_FILLER,
                             {structureId: spawn.id, creepId: creep.id})
                         if (task) {
                             runningFillerTasks.push(task)

@@ -1,9 +1,9 @@
 import {mockGlobal, mockInstanceOf} from "screeps-jest";
-import {CreepController} from "../../../..//src/creeps/creepController";
-import {Kernel} from "../../../..//src/os/Kernel";
-import {BuildStructure} from "../../../..//src/tasks/creeps/actions/BuildStructure"
-import {HarvestEnergy} from "../../../..//src/tasks/creeps/actions/HarvestEnergy";
-import {BuilderRole} from "../../../..//src/tasks/creeps/BuilderRole"
+import {CreepController} from "../../../../src/creeps/creepController";
+import {Kernel} from "../../../../src/os/Kernel";
+import {BuildStructure} from "../../../../src/tasks/creeps/actions/BuildStructure"
+import {BuilderRole} from "../../../../src/tasks/creeps/BuilderRole"
+import {GetEnergy} from "../../../../src/tasks/creeps/actions/GetEnergy"
 
 let mockCreep: Creep
 let mockConstructionSite: ConstructionSite
@@ -80,14 +80,14 @@ it("Should create a builder action if creep is full", () => {
     expect(childTask.wakeParent).toBeTruthy()
 })
 
-it("Should create a harvest action if creep is not full", () => {
+it("Should create a get energy action if creep is not full", () => {
     mockCreep.store[RESOURCE_ENERGY] = 0
     task.run()
     expect(task.finished).not.toBeTruthy()
     expect(task.suspended).toBeTruthy()
     expect(kernel.taskTable.length).toBe(2)
-    const childTask = kernel.findTaskById("builder-harvest-myid")!
-    expect(childTask).toBeInstanceOf(HarvestEnergy)
+    const childTask = kernel.findTaskById("builder-getenergy-myid")!
+    expect(childTask).toBeInstanceOf(GetEnergy)
     expect(childTask.parent).toBe(task)
     expect(childTask.wakeParent).toBeTruthy()
 })

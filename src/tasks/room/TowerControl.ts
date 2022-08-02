@@ -57,19 +57,19 @@ export class TowerControl extends RoomTask {
 
     repairStructures(tower: StructureTower): boolean {
         for (const struct of this.repairableStructures) {
-            if (struct.hits < struct.hitsMax) {
+            if (struct.hits < Math.min(struct.hitsMax, 50000)) {
                 tower.repair(struct)
                 return true
             }
         }
         for (const struct of this.repairableNeutralStructures) {
-            if (struct.hits < struct.hitsMax) {
+            if (struct.hits < Math.min(struct.hitsMax, 50000)) {
                 tower.repair(struct)
                 return true
             }
         }
         for (const struct of this.repairableDefense) {
-            if (struct.hits < struct.hitsMax) {
+            if (struct.hits < Math.min(struct.hitsMax, 50000)) {
                 tower.repair(struct)
                 return true
             }

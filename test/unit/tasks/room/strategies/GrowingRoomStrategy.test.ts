@@ -1,5 +1,6 @@
 import {mockGlobal, mockInstanceOf} from "screeps-jest"
 import {Kernel} from "../../../../../src/os/Kernel"
+import {Construction} from "../../../../../src/tasks/room/Construction"
 import {ControllerUpgrade} from "../../../../../src/tasks/room/ControllerUpgrade"
 import {SourceHarvest} from "../../../../../src/tasks/room/SourceHarvest"
 import {Storage} from "../../../../../src/tasks/room/Storage"
@@ -72,4 +73,11 @@ it("Should not start a tower control task at rcl < 3", () => {
     expect(task.finished).toBeTruthy()
     const childTask = kernel.findTaskById("towerCtrl")
     expect(childTask).toBeUndefined()
+})
+
+it("Should start a construction task", () => {
+    task.run()
+    expect(task.finished).toBeTruthy()
+    const childTask = kernel.findTaskById("construct")
+    expect(childTask).toBeInstanceOf(Construction)
 })

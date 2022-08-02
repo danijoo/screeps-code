@@ -1,6 +1,6 @@
 import {
     TASK_CREEP_ACTION_BUILD_STRUCTURE,
-    TASK_CREEP_ACTION_HARVEST_ENERGY,
+    TASK_CREEP_ACTION_GET_ENERGY,
     TASK_CREEP_ROLE_BUILDER,
 } from "../taskNames"
 import {CreepTask} from "./CreepTask"
@@ -18,16 +18,11 @@ export class BuilderRole extends CreepTask {
 
         if (creep.store[RESOURCE_ENERGY] !== creep.store.getCapacity()) {
             // Find closest source with energy available
-            const sources: Source[] = constructionSite.room!.find(FIND_SOURCES)
-            const closestSource = sources.filter(s => s.energy > 0)
-                .sort((a, b) => {
-                    return a.pos.getRangeTo(constructionSite) - b.pos.getRangeTo(constructionSite)
-                })[0]
             this.forkAndSuspend(
-                TASK_CREEP_ACTION_HARVEST_ENERGY,
-                "builder-harvest-" + this.id.split("-").pop(),
+                TASK_CREEP_ACTION_GET_ENERGY,
+                "builder-getenergy-" + this.id.split("-").pop(),
                 this.priority,
-                { creepId: creep.id, sourceId: closestSource.id },
+                { creepId: creep.id},
                 true)
         } else {
             this.forkAndSuspend(
