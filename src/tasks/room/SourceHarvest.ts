@@ -40,7 +40,7 @@ export class SourceHarvest extends RoomTask {
         const taskId = "harvester-" + source.id
         const task = this.kernel.findTaskById(taskId)
         if (!task) {
-            const creep = requestCreep(new CreepRequest([WORK], this.priority), taskId)
+            const creep = requestCreep(new CreepRequest([WORK], this.priority, 4), taskId)
             if (creep) {
                 this.fork(
                     TASK_CREEP_ROLE_HARVESTER,

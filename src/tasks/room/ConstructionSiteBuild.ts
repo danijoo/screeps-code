@@ -54,8 +54,7 @@ export class ConstructionSiteBuild extends RoomTask {
 
     createTaskForSite(taskId: string, site: ConstructionSite): Task | undefined {
         // Get a creep and create a new builder task wth it
-        const creepRequest = new CreepRequest([MOVE, WORK, CARRY], this.priority,
-            undefined, false)
+        const creepRequest = new CreepRequest([MOVE, WORK, CARRY], this.priority)
         const creep = requestCreep(creepRequest, taskId)
         if (creep) {
             return this.fork(
