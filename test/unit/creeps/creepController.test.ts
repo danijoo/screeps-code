@@ -1,4 +1,4 @@
-import {CreepController} from "../../..//src/creeps/creepController";
+import {CreepController} from "../../../src/creeps/creepController";
 import {mockGlobal, mockInstanceOf, mockStructure} from "screeps-jest";
 import CreepRequest = CreepController.CreepRequest;
 
@@ -10,15 +10,24 @@ describe("With some free creeps", () => {
             creeps: {
                 free: mockInstanceOf<Creep>({
                     spawning: false,
-                    memory: {owner: null}
+                    memory: {owner: null},
+                    room: {
+                        energyCapacityAvailable: 300
+                    }
                 }),
                 free2: mockInstanceOf<Creep>({
                     spawning: false,
-                    memory: {owner: "CreepController"}
+                    memory: {owner: "CreepController"},
+                    room: {
+                        energyCapacityAvailable: 300
+                    }
                 }),
                 owned: mockInstanceOf<Creep>({
                     spawning: false,
-                    memory: {owner: "qwerty"}
+                    memory: {owner: "qwerty"},
+                    room: {
+                        energyCapacityAvailable: 300
+                    }
                 })
             },
             spawns: {
@@ -51,11 +60,13 @@ describe("With some free creeps", () => {
 
     it("Should return a matching creep if available", () => {
         Object.values(Game.creeps).forEach(c => {
-            c.getActiveBodyparts = () => {
+            c.getActiveBodyparts = (bodyPart: string) => {
+                if (bodyPart === MOVE)
+                    return 2
                 return 1
             }
         })
-        const creep = CreepController.requestCreep(new CreepController.CreepRequest([MOVE, WORK], 75), "name")
+        const creep = CreepController.requestCreep(new CreepController.CreepRequest([MOVE, WORK, CARRY, MOVE], 75, undefined, false), "name")
         expect(creep).not.toBeNull()
         expect(creep!.memory.owner).toBe("name")
         expect(CreepController.getNumFreeCreeps()).toBe(1)

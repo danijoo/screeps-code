@@ -39,14 +39,17 @@ beforeEach(() => {
         memory: {
             owner: "CreepController"
         },
-        getActiveBodyparts: () => 1
+        getActiveBodyparts: () => 2,
+        room: {
+            energyCapacityAvailable: 300
+        }
     })
     mockGlobal<Game>("Game", {
         rooms: {
             roomId: mockRoom,
         },
         spawns: { spawnId: mockInstanceOf<StructureSpawn>({
-            spawning: () => true
+            spawning: () => true,
         })},
         creeps: {
             creepId: mockCreep

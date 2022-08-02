@@ -1,8 +1,8 @@
 import {mockGlobal, mockInstanceOf} from "screeps-jest"
-import {CreepController} from "../../../..//src/creeps/creepController"
-import {Kernel} from "../../../..//src/os/Kernel"
-import {UpgraderRole} from "../../../..//src/tasks/creeps/UpgraderRole"
-import {ControllerUpgrade} from "../../../..//src/tasks/room/ControllerUpgrade"
+import {CreepController} from "../../../../src/creeps/creepController"
+import {Kernel} from "../../../../src/os/Kernel"
+import {UpgraderRole} from "../../../../src/tasks/creeps/UpgraderRole"
+import {ControllerUpgrade} from "../../../../src/tasks/room/ControllerUpgrade"
 import CreepRequest = CreepController.CreepRequest
 
 let task: ControllerUpgrade
@@ -23,7 +23,10 @@ beforeEach(() => {
         memory: {
             owner: "CreepController"
         },
-        getActiveBodyparts: () => 1
+        getActiveBodyparts: () => 2,
+        room: {
+            energyCapacityAvailable: 300
+        }
     })
     mockGlobal<Game>("Game", {
         rooms: {

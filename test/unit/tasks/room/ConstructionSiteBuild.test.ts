@@ -14,7 +14,10 @@ beforeEach(() => {
             memory: {
                 owner: undefined,
             },
-            getActiveBodyparts: () => 2
+            getActiveBodyparts: () => 2,
+            room: {
+                energyCapacityAvailable: 300
+            }
         }),
         "two": mockInstanceOf<Creep>({
             id: "two",
@@ -22,7 +25,10 @@ beforeEach(() => {
             memory: {
                 owner: undefined,
             },
-            getActiveBodyparts: () => 2
+            getActiveBodyparts: () => 2,
+            room: {
+                energyCapacityAvailable: 300
+            }
         }),
         "three": mockInstanceOf<Creep>({
             id: "three",
@@ -30,7 +36,10 @@ beforeEach(() => {
             memory: {
                 owner: undefined,
             },
-            getActiveBodyparts: () => 2
+            getActiveBodyparts: () => 2,
+            room: {
+                energyCapacityAvailable: 300
+            }
         }),
         "four": mockInstanceOf<Creep>({
             id: "four",
@@ -38,7 +47,10 @@ beforeEach(() => {
             memory: {
                 owner: undefined,
             },
-            getActiveBodyparts: () => 2
+            getActiveBodyparts: () => 2,
+            room: {
+                energyCapacityAvailable: 300
+            }
         }),
         "five": mockInstanceOf<Creep>({
             id: "five",
@@ -46,7 +58,10 @@ beforeEach(() => {
             memory: {
                 owner: undefined,
             },
-            getActiveBodyparts: () => 2
+            getActiveBodyparts: () => 2,
+            room: {
+                energyCapacityAvailable: 300
+            }
         }),
         "six": mockInstanceOf<Creep>({
             id: "six",
@@ -54,7 +69,10 @@ beforeEach(() => {
             memory: {
                 owner: undefined,
             },
-            getActiveBodyparts: () => 2
+            getActiveBodyparts: () => 2,
+            room: {
+                energyCapacityAvailable: 300
+            }
         }),
     }
     mockGlobal<Game>("Game", {
