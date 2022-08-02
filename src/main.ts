@@ -1,5 +1,6 @@
 import { ErrorMapper } from "utils/ErrorMapper";
 import {Kernel} from "./os/Kernel";
+import {ConstructionRequest} from "./tasks/room/Construction"
 import {PRIORITY_INIT} from "./tasks/taskPriorities";
 import {TASK_INIT} from "./tasks/taskNames";
 import {initMemory} from "./utils/initMemory"
@@ -7,6 +8,23 @@ import {onRespawn} from "./utils/onRespawn"
 import {buryTheDead} from "./creeps/buryTheDead"
 import { onGlobalContextChangeDetected } from "utils/onGlobalContextChange";
 import { CreepController } from "creeps/creepController";
+
+declare global {
+    interface CreepMemory {
+        owner: string | null
+    }
+
+    interface RoomMemory {
+        sources: {
+            [sourceId: string]: {
+                position: [number, number],
+                ignored: boolean,
+                harvesterPosition: [number, number],
+            }
+        }
+        constructionQueue: ConstructionRequest[]
+    }
+}
 
 // reset stuff on Respawn
 onRespawn(() => {

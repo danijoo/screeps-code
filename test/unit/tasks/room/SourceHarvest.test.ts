@@ -1,8 +1,8 @@
 import {mockGlobal, mockInstanceOf} from "screeps-jest"
-import {CreepController} from "../../../..//src/creeps/creepController"
-import {Kernel} from "../../../..//src/os/Kernel"
-import {HarvesterRole} from "../../../..//src/tasks/creeps/HarvesterRole"
-import {SourceHarvest} from "../../../..//src/tasks/room/SourceHarvest"
+import {CreepController} from "../../../../src/creeps/creepController"
+import {Kernel} from "../../../../src/os/Kernel"
+import {HarvesterRole} from "../../../../src/tasks/creeps/HarvesterRole"
+import {SourceHarvest} from "../../../../src/tasks/room/SourceHarvest"
 
 let task: SourceHarvest
 let kernel: Kernel
@@ -18,7 +18,7 @@ beforeEach(() => {
         roomName: "roomId",
         lookFor: () => []
     })
-    const roomMemory: RoomMemory = {
+    const roomMemory = mockInstanceOf<RoomMemory>({
         sources: {
             sourceId: {
                 ignored: false,
@@ -26,7 +26,7 @@ beforeEach(() => {
                 harvesterPosition: [1, 2],
             }
         }
-    }
+    })
     const mockRoom = mockInstanceOf<Room>({
         name: "roomId",
         memory: roomMemory,
