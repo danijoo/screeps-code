@@ -17,6 +17,9 @@ function initRoomMemory(room: Room): void {
             }
         }
     }
+    if (room.memory.constructionQueue === undefined) {
+        room.memory.constructionQueue = []
+    }
 }
 
 function shouldIgnoreSource(source: Source): boolean {
