@@ -1,10 +1,10 @@
+import {CreepController} from "../creeps/creepController"
 import {Kernel} from "../os/Kernel"
 
 declare global {
     interface Memory {
         stats: {
             time: number
-            creepCount: number
             roomStats: {[roomName: string]: {
                     energyAvailable: number
                     energyCapacityAvailable: number
@@ -30,15 +30,18 @@ declare global {
                 tasksAdded: number
                 tasksFinished: number
             }
+            creeps: {
+                count: number,
+                used: number
+            }
         }
     }
 }
 
 export function collectStats(kernel: Kernel) {
-    // reset
+    const creepCount = Object.keys(Game.creeps).length
     Memory.stats = {
         time: Game.time,
-        creepCount: Object.keys(Game.creeps).length,
         roomStats: {},
         gcl: {
             progress: Game.gcl.progress,
@@ -56,7 +59,11 @@ export function collectStats(kernel: Kernel) {
             tasksSuspended: kernel.tickTasksSuspended,
             tasksAdded: kernel.tickTasksAdded,
             tasksFinished: kernel.tickTasksFinished
-        }
+        },
+        creeps: {
+            count: creepCount,
+            used: creepCount - CreepController.getNumFreeCreeps()
+        },
     }
 
     for (const room of Object.values(Game.rooms)) {
