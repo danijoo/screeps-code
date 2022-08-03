@@ -1,17 +1,21 @@
-import {buryTheDead} from "../../..//src/creeps/buryTheDead";
-import {Game, Memory} from "../mock";
+import {mockGlobal, mockInstanceOf} from "screeps-jest"
+import {buryTheDead} from "../../../src/creeps/buryTheDead";
 
 beforeEach(() => {
-    // @ts-ignore
-    global.Game = _.clone(Game)
-    Game.creeps.qwerty = {name: "qwerty"}
-    Game.creeps.qwerty2 = {name: "qwerty2"}
-    // @ts-ignore
-    global.Memory = _.clone(Memory)
-    Memory.creeps.qwerty = {
-        owner: "test",
-        working: false
-    }
+    const creep = mockInstanceOf<Creep>({
+        name: "qwerty"
+    })
+    mockGlobal<Game>("Game", {
+        creeps: {
+            qwerty: creep,
+        }
+    })
+    mockGlobal<Memory>("Memory", {
+        creeps: {
+            qwerty2: {},
+            qwerty: {}
+        }
+    }, true)
 })
 
 it("should remove dead creeps memory", () => {

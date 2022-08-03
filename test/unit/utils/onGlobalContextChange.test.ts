@@ -1,11 +1,11 @@
-import {onGlobalContextChangeDetected} from "../../..//src/utils/onGlobalContextChange";
-import {Game, Memory} from "../mock";
+import { mockGlobal } from "screeps-jest";
+import {onGlobalContextChangeDetected} from "../../../src/utils/onGlobalContextChange";
 
 beforeEach(() => {
-    // @ts-ignore
-    global.Game = _.clone(Game)
-    // @ts-ignore
-    global.Memory = _.clone(Memory)
+    mockGlobal<Game>("Game", {
+        time: 0
+    })
+    mockGlobal<Memory>("Memory")
 })
 
 
