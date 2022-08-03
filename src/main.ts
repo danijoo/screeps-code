@@ -8,6 +8,7 @@ import {onRespawn} from "./utils/onRespawn"
 import {buryTheDead} from "./creeps/buryTheDead"
 import { onGlobalContextChangeDetected } from "utils/onGlobalContextChange";
 import { CreepController } from "creeps/creepController";
+import { collectStats } from "utils/collectStats";
 
 declare global {
     interface CreepMemory {
@@ -46,5 +47,6 @@ export const loop = ErrorMapper.wrapLoop(() => {
     kernel.createTaskIfNotExists(TASK_INIT, "init", null, PRIORITY_INIT)
     kernel.runTasks()
     kernel.report()
+    collectStats(kernel)
     kernel.suspend()
 });

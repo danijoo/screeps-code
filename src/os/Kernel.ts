@@ -15,6 +15,12 @@ export class Kernel {
     taskTable = new TaskTable()
     executedTasks: Task[] = []
 
+    tickTasksTotal: number = 0
+    tickTasksExecuted: number = 0
+    tickTasksSuspended: number = 0
+    tickTasksAdded: number = 0
+    tickTasksFinished: number = 0
+
     init(): void {
         // repopulate process table
         const taskList = Memory.tasks? Memory.tasks : []
@@ -29,6 +35,7 @@ export class Kernel {
     }
 
     runTasks(): void {
+        this.tickTasksSuspended = Array.from(this.taskTable.items.values()).filter(task => task.suspended).length
         const filter = (t: Task): boolean => {
             const permanentlySuspended = _.isBoolean(t.suspended) && t.suspended
             return !t.executed && !permanentlySuspended
@@ -41,6 +48,7 @@ export class Kernel {
                 try {
                     task.run()
                     if (task.finished) {
+                        this.tickTasksFinished += 1
                         this.taskTable.remove(task.id)
                         if (task.parent && task.wakeParent) {
                             this.wake(task.parent)
@@ -49,11 +57,13 @@ export class Kernel {
                 } catch (e) {
                     console.log(`Failed to execute task ${task.type}:${task.id}: ${e}`)
                 }
+                this.tickTasksExecuted += 1
             }
             task.executed = true
             this.executedTasks.push(task)
             task = this.taskTable.nextByPriority(filter)
         }
+        this.tickTasksTotal = this.taskTable.length + this.tickTasksFinished
     }
 
     suspend(): void {
@@ -140,10 +150,14 @@ export class Kernel {
      * @param task
      */
     addTaskIfNotExists(task: Task): boolean {
-        return this.taskTable.addIfNotExists(task)
+        const result = this.taskTable.addIfNotExists(task)
+        if (result)
+            this.tickTasksAdded += 1
+        return result
     }
 
     addTask(task: Task): void {
+        this.tickTasksAdded += 1
         this.taskTable.add(task)
     }
 
