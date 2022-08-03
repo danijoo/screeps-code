@@ -22,17 +22,11 @@ export class StoreFillerRole extends CreepTask {
         }
 
         if (creep.store[RESOURCE_ENERGY] !== creep.store.getCapacity()) {
-            // Find closest source with energy available
-            const sources: Source[] = structure.room.find(FIND_SOURCES)
-            const closestSource = sources.filter(s => s.energy > 0)
-                .sort((a, b) => {
-                    return a.pos.getRangeTo(structure) - b.pos.getRangeTo(structure)
-                })[0]
             this.forkAndSuspend(
                 TASK_CREEP_ACTION_GET_ENERGY,
                 "filler-getenergy-" + this.id.split("-").pop(),
                 this.priority,
-                { creepId: creep.id, sourceId: closestSource.id },
+                { creepId: creep.id },
                 true)
         } else {
             this.forkAndSuspend(
