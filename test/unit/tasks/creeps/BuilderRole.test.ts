@@ -29,7 +29,13 @@ beforeEach(() => {
         creeps: {
             "creepId": mockCreep
         },
-        spawns: {"sourceId": mockSource},
+        spawns: {
+            spawnid: {
+                room: {
+                    energyAvailable: 300
+                }
+            }
+        },
         getObjectById: (id: string) => {
             if (id === "creepId") {
                 return mockCreep

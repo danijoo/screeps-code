@@ -18,12 +18,14 @@ export namespace CreepController {
     let creeps: Creep[]
     let creepCount: number
     let ownedCreeps: Creep[]
+    let maxSpawnCapacity: number
 
     export function init(): void {
         creeps = Object.values(Game.creeps).filter(c => !c.spawning)
         creepCount = creeps.length
         ownedCreeps = creeps.filter(c => !c.memory.owner || c.memory.owner === NAME )
         spawn = Object.values(Game.spawns)[0]
+        maxSpawnCapacity = creeps.length > 3 ? spawn.room.energyCapacityAvailable : spawn.room.energyAvailable
         console.log("Unused creeps: " + ownedCreeps.length + "/" + creepCount)
     }
 
@@ -62,14 +64,18 @@ export namespace CreepController {
     }
 
     function spawnCreep(req: CreepRequest): boolean {
-        const bodyParts = expandBodyParts(req, spawn.room.energyCapacityAvailable)
+        const bodyParts = expandBodyParts(req)
         const cost = _.sum(bodyParts.map((part: BodyPartConstant) => BODYPART_COST[part]))
-        if (cost <= spawn.room.energyCapacityAvailable) {
+        if (cost <= maxSpawnCapacity) {
             return spawn.spawnCreep(bodyParts, "CreepyCreep" + Game.time,
                 {memory: {owner: NAME}}) === 0
         } else {
             return false
         }
+    }
+
+    export function getMaxSpawnCapacity(): number {
+        return maxSpawnCapacity
     }
 
     export function returnCreep(creep: Creep): void {
@@ -86,7 +92,7 @@ export namespace CreepController {
     }
 
 
-    function expandBodyParts(request: CreepRequest, maxCapacity: number): BodyPartConstant[] {
+    function expandBodyParts(request: CreepRequest): BodyPartConstant[] {
         let expandedParts: BodyPartConstant[] = []
 
         // make sure the resulting creep has at least one move part
@@ -102,7 +108,7 @@ export namespace CreepController {
         while(numExpands < request.maxNumExpand) {
             const part = request.template[pointer]
             const partCost = BODYPART_COST[part]
-            if (cost + partCost <= maxCapacity) {
+            if (cost + partCost <= maxSpawnCapacity) {
                 expandedParts.push(part)
                 cost += partCost
             } else {
@@ -122,7 +128,7 @@ export namespace CreepController {
      * Performs a bodypart expansion before matching
      */
     function matchCreepToRequest(creep: Creep, request: CreepRequest): creepMatch {
-        const expandedParts = expandBodyParts(request, creep.room.energyCapacityAvailable)
+        const expandedParts = expandBodyParts(request)
         const bodyPartCounts = _.countBy(expandedParts)
         let match: creepMatch = CREEP_MATCH_GOOD
         for (const bodyPart of Object.keys(bodyPartCounts)) {

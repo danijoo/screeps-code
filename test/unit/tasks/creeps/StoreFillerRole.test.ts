@@ -1,9 +1,9 @@
 import {mockGlobal, mockInstanceOf} from "screeps-jest";
-import {CreepController} from "../../../..//src/creeps/creepController";
-import {Kernel} from "../../../..//src/os/Kernel";
-import {GetEnergy} from "../../../..//src/tasks/creeps/actions/GetEnergy"
-import {TransferEnergy} from "../../../..//src/tasks/creeps/actions/TransferEnergy";
-import {StoreFillerRole} from "../../../..//src/tasks/creeps/StoreFillerRole";
+import {CreepController} from "../../../../src/creeps/creepController";
+import {Kernel} from "../../../../src/os/Kernel";
+import {GetEnergy} from "../../../../src/tasks/creeps/actions/GetEnergy"
+import {TransferEnergy} from "../../../../src/tasks/creeps/actions/TransferEnergy";
+import {StoreFillerRole} from "../../../../src/tasks/creeps/StoreFillerRole";
 
 let mockCreep: Creep
 let mockStructure: StructureSpawn
@@ -30,9 +30,15 @@ beforeEach(() => {
     mockGlobal<Game>("Game", {
         time: 10,
         creeps: {
-            "creepId": mockCreep
+            creepId: mockCreep
         },
-        spawns: {"sourceId": mockSource},
+        spawns: {
+            spawnid: {
+                room: {
+                    energyAvailable: 300
+                }
+            }
+        },
         getObjectById: (id: string) => {
             if (id === "creepId") {
                 return mockCreep

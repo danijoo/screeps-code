@@ -27,7 +27,10 @@ describe("With available creep", () => {
             spawns: {
                 Spawn1: mockInstanceOf<StructureSpawn>({
                     // @ts-ignore
-                    spawning: false
+                    spawning: false,
+                    room: {
+                        energyAvailable: 300
+                    }
                 })
             }
         })
@@ -124,7 +127,7 @@ describe("Without creeps ingame", () => {
                     // @ts-ignore
                     spawning: false,
                     room: {
-                        energyCapacityAvailable: 300
+                        energyAvailable: 300
                     },
                     spawnCreep: () => {return 0}
                 })

@@ -1,8 +1,7 @@
 import {mockGlobal, mockInstanceOf} from "screeps-jest"
-import {CreepController} from "../../../..//src/creeps/creepController"
-import {Kernel} from "../../../..//src/os/Kernel"
-import {HarvesterRole} from "../../../..//src/tasks/creeps/HarvesterRole"
-import anything = jasmine.anything
+import {CreepController} from "../../../../src/creeps/creepController"
+import {Kernel} from "../../../../src/os/Kernel"
+import {HarvesterRole} from "../../../../src/tasks/creeps/HarvesterRole"
 
 let mockCreep: Creep
 let task: HarvesterRole
@@ -26,7 +25,11 @@ beforeEach(() => {
             "creepId": mockCreep
         },
         spawns: {
-            "spawnId": mockInstanceOf<StructureSpawn>()
+            "spawnId": mockInstanceOf<StructureSpawn>({
+                room: {
+                    energyAvailable: 300
+                }
+            })
         },
         getObjectById: (id: string) => {
             if (id === "creepId") {

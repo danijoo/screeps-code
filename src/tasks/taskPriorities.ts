@@ -1,5 +1,6 @@
 export const PRIORITY_INIT               = 99
 export const PRIORITY_SYSTEM_FREE_CREEPS = 98
+export const PRIORITY_CREEP_CONTROL      = 97
 export const PRIORITY_ROOM_CONTROL       = 97
 export const PRIORITY_ROOM_STRATEGY      = 96
 

@@ -48,9 +48,14 @@ beforeEach(() => {
         rooms: {
             roomId: mockRoom,
         },
-        spawns: { spawnId: mockInstanceOf<StructureSpawn>({
-            spawning: () => true,
-        })},
+        spawns: {
+            spawnId: mockInstanceOf<StructureSpawn>({
+                spawning: () => true,
+                room: {
+                    energyAvailable: 300
+                }
+            }
+        )},
         creeps: {
             creepId: mockCreep
         }

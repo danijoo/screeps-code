@@ -12,28 +12,32 @@ describe("With some free creeps", () => {
                     spawning: false,
                     memory: {owner: null},
                     room: {
-                        energyCapacityAvailable: 300
+                        energyCapacityAvailable: 300,
                     }
                 }),
                 free2: mockInstanceOf<Creep>({
                     spawning: false,
                     memory: {owner: "CreepController"},
                     room: {
-                        energyCapacityAvailable: 300
+                        energyCapacityAvailable: 300,
                     }
                 }),
                 owned: mockInstanceOf<Creep>({
                     spawning: false,
                     memory: {owner: "qwerty"},
                     room: {
-                        energyCapacityAvailable: 300
+                        energyCapacityAvailable: 300,
                     }
                 })
             },
             spawns: {
                 SpawnN: mockStructure(STRUCTURE_SPAWN, {
                     // @ts-ignore
-                    spawning: true
+                    spawning: true,
+                    room: {
+                        energyAvailable: 300,
+                        energyCapacityAvailable: 300
+                    }
                 })
             }
         })
@@ -106,7 +110,8 @@ describe("Without Creeps", () => {
                     spawning: false,
                     spawnCreep: jest.fn(),
                     room: {
-                        energyCapacityAvailable: 300
+                        energyCapacityAvailable: 300,
+                        energyAvailable: 300
                     }
                 })
             }
@@ -116,7 +121,7 @@ describe("Without Creeps", () => {
     })
 
     it("Should spawn a new creep if no match is available", () => {
-        const creepRequest = createCreepRequest(CREEP_ROLE_PIONEER, 75)
+        const creepRequest = createCreepRequest(CREEP_ROLE_PIONEER, 75, true)
         const response = CreepController.requestCreep(creepRequest, "somebody")
         expect(response).toBeNull()
         // @ts-ignore
@@ -132,7 +137,7 @@ describe("Without Creeps", () => {
     })
 
     it("Should not expand bodyparts if not requested", () => {
-        const creepRequest = createCreepRequest(CREEP_ROLE_PIONEER, 75, 0)
+        const creepRequest = createCreepRequest(CREEP_ROLE_PIONEER, 75, undefined, 0)
         const response = CreepController.requestCreep(creepRequest, "somebody")
         expect(response).toBeNull()
         // @ts-ignore
@@ -149,5 +154,27 @@ describe("Without Creeps", () => {
         const mockFn = Game.spawns.SpawnN.spawnCreep.mock;
         expect(mockFn.calls.length).toBe(1)
         expect(mockFn.calls[0][0]).toStrictEqual([MOVE, WORK, WORK])
+    })
+
+    it("Should use available energy if there are less than 3 creeps in the room", () => {
+        Game.creeps = {}
+        Game.spawns.SpawnN.room.energyCapacityAvailable = 1000
+        Game.spawns.SpawnN.room.energyAvailable = 300
+        CreepController.init()
+        expect(CreepController.getMaxSpawnCapacity()).toBe(300)
+    })
+
+    it ("should use full energy capacity if there are more than 3 creeps in the room", () => {
+        Game.creeps = {
+            a: mockInstanceOf<Creep>({spawning: false, memory: {owner: "CreepController"}}),
+            b: mockInstanceOf<Creep>({spawning: false, memory: {owner: "CreepController"}}),
+            c: mockInstanceOf<Creep>({spawning: false, memory: {owner: "CreepController"}}),
+            d: mockInstanceOf<Creep>({spawning: false, memory: {owner: "CreepController"}}),
+        }
+        expect(Object.values(Game.creeps).length).toBe(4)
+        Game.spawns.SpawnN.room.energyCapacityAvailable = 1000
+        Game.spawns.SpawnN.room.energyAvailable = 300
+        CreepController.init()
+        expect(CreepController.getMaxSpawnCapacity()).toBe(1000)
     })
 })

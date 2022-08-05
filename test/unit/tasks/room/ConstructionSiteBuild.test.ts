@@ -86,7 +86,11 @@ beforeEach(() => {
         creeps: mockCreeps,
         spawns: {
             "Spawn1": mockInstanceOf<StructureSpawn>({
-                spawning: () => false
+                spawning: () => false,
+                room: {
+                    energyCapacityAvailable: 300,
+                    energyAvailable: 300
+                }
             })
         }
     })

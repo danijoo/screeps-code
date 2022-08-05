@@ -1,6 +1,7 @@
 // system/maintenance tasks
 export const TASK_INIT = "Init"
 export const TASK_SYSTEM_FREE_CREEPS = "FreeCreeps"
+export const TASK_CREEP_CONTROL = "CreepController"
 
 // room orders
 export const TASK_ROOM_CONTROL = "Room/Control"

@@ -24,17 +24,17 @@ const REQUEST_TEMPLATES = {
     [CREEP_ROLE_UPGRADER]: {
         template: [MOVE, WORK, CARRY],
         maxNumExpand: Infinity,
-        mustMatchExactly: true
+        mustMatchExactly: false
     },
     [CREEP_ROLE_FILLER]: {
         template: [MOVE, CARRY, CARRY],
         maxNumExpand: Infinity,
-        mustMatchExactly: true
+        mustMatchExactly: false
     },
     [CREEP_ROLE_BUILDER]: {
         template: [MOVE, WORK, CARRY],
         maxNumExpand: Infinity,
-        mustMatchExactly: true
+        mustMatchExactly: false
     }
 }
 
@@ -43,17 +43,19 @@ export interface CreepRequest {
     priority: number
     // base body parts
     template: BodyPartConstant[],
-    // max number to expand this template before construction
-    maxNumExpand: number
     // whether an idle creep can fill this role when it has every body part
     // once or requires the exact number of parts
     mustMatchExactly: boolean
+    // max number to expand this template before construction
+    maxNumExpand: number
+
 }
 
 export function createCreepRequest(role: creepRole,
                             priority: number = 50,
+                            mustMatchExactly?: boolean,
                             maxNumExpand?: number,
-                            mustMatchExactly?: boolean): CreepRequest {
+                            ): CreepRequest {
     const req = {
         ...REQUEST_TEMPLATES[role],
         priority: priority,
