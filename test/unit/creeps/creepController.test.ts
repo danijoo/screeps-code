@@ -1,6 +1,6 @@
+import {createCreepRequest, CREEP_ROLE_HARVESTER, CREEP_ROLE_PIONEER} from "../../../src/creeps/creepConstants"
 import {CreepController} from "../../../src/creeps/creepController";
 import {mockGlobal, mockInstanceOf, mockStructure} from "screeps-jest";
-import CreepRequest = CreepController.CreepRequest;
 
 describe("With some free creeps", () => {
 
@@ -66,7 +66,7 @@ describe("With some free creeps", () => {
                 return 1
             }
         })
-        const creep = CreepController.requestCreep(new CreepController.CreepRequest([MOVE, WORK, CARRY, MOVE], 75, undefined, false), "name")
+        const creep = CreepController.requestCreep(createCreepRequest(CREEP_ROLE_PIONEER, 75), "name")
         expect(creep).not.toBeNull()
         expect(creep!.memory.owner).toBe("name")
         expect(CreepController.getNumFreeCreeps()).toBe(1)
@@ -78,17 +78,7 @@ describe("With some free creeps", () => {
                 return 0
             }
         })
-        const creep = CreepController.requestCreep(new CreepController.CreepRequest(["move"], 75), "name")
-        expect(creep).toBeNull()
-    })
-
-    it("Should not return a creep if it is a bad match (2)", () => {
-        Object.values(Game.creeps).forEach(c => {
-            c.getActiveBodyparts = () => {
-                return 1
-            }
-        })
-        const creep = CreepController.requestCreep(new CreepController.CreepRequest([MOVE, WORK, WORK], 75), "name")
+        const creep = CreepController.requestCreep(createCreepRequest(CREEP_ROLE_HARVESTER, 75), "name")
         expect(creep).toBeNull()
     })
 
@@ -98,8 +88,7 @@ describe("With some free creeps", () => {
                 return 1
             }
         })
-        const creep = CreepController.requestCreep(new CreepController.CreepRequest([MOVE, WORK, WORK],
-            75, undefined, false), "name")
+        const creep = CreepController.requestCreep(createCreepRequest(CREEP_ROLE_PIONEER, 75), "name")
         expect(creep).not.toBeNull()
     })
 })
@@ -127,7 +116,7 @@ describe("Without Creeps", () => {
     })
 
     it("Should spawn a new creep if no match is available", () => {
-        const creepRequest = new CreepRequest([MOVE, CARRY, WORK], 75)
+        const creepRequest = createCreepRequest(CREEP_ROLE_PIONEER, 75)
         const response = CreepController.requestCreep(creepRequest, "somebody")
         expect(response).toBeNull()
         // @ts-ignore
@@ -135,7 +124,7 @@ describe("Without Creeps", () => {
     })
 
     it("Should not spawn a creep if build is set to false", () => {
-        const creepRequest = new CreepRequest([MOVE, CARRY, WORK], 75)
+        const creepRequest = createCreepRequest(CREEP_ROLE_PIONEER, 75)
         const response = CreepController.requestCreep(creepRequest, "somebody", false)
         expect(response).toBeNull()
         // @ts-ignore
@@ -143,22 +132,22 @@ describe("Without Creeps", () => {
     })
 
     it("Should not expand bodyparts if not requested", () => {
-        const creepRequest = new CreepRequest([MOVE, CARRY, WORK], 75, 0)
+        const creepRequest = createCreepRequest(CREEP_ROLE_PIONEER, 75, 0)
         const response = CreepController.requestCreep(creepRequest, "somebody")
         expect(response).toBeNull()
         // @ts-ignore
         const mockFn = Game.spawns.SpawnN.spawnCreep.mock;
         expect(mockFn.calls.length).toBe(1)
-        expect(mockFn.calls[0][0]).toStrictEqual([MOVE, CARRY, WORK])
+        expect(mockFn.calls[0][0]).toStrictEqual([MOVE, WORK, CARRY])
     })
 
     it("Should expand creep bodyparts if requested", () => {
-        const creepRequest = new CreepRequest([MOVE, CARRY], 75)
+        const creepRequest = createCreepRequest(CREEP_ROLE_HARVESTER, 75)
         const response = CreepController.requestCreep(creepRequest, "somebody")
         expect(response).toBeNull()
         // @ts-ignore
         const mockFn = Game.spawns.SpawnN.spawnCreep.mock;
         expect(mockFn.calls.length).toBe(1)
-        expect(mockFn.calls[0][0]).toStrictEqual([MOVE, CARRY, MOVE, CARRY, MOVE, CARRY])
+        expect(mockFn.calls[0][0]).toStrictEqual([MOVE, WORK, WORK])
     })
 })

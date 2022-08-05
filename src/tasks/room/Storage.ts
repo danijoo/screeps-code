@@ -1,9 +1,9 @@
+import {createCreepRequest, CREEP_ROLE_FILLER} from "../../creeps/creepConstants"
 import {CreepController} from "../../creeps/creepController";
 import {Task} from "../../os/Task";
 import {TASK_CREEP_ROLE_FILLER, TASK_ROOM_STORAGE} from "../taskNames";
 import {PRIORITY_ROLE_FILLER} from "../taskPriorities"
 import {RoomTask} from "./RoomTask"
-import CreepRequest = CreepController.CreepRequest;
 import requestCreep = CreepController.requestCreep;
 
 const MAX_NUM_FILLER = 3
@@ -55,8 +55,7 @@ export class Storage extends RoomTask {
                     }
 
                     // Get a creep and create a new filler task wth it
-                    const creepRequest = new CreepRequest([MOVE, CARRY, CARRY], this.priority,
-                        undefined, false)
+                    const creepRequest = createCreepRequest(CREEP_ROLE_FILLER, this.priority)
                     const creep = requestCreep(creepRequest, taskId)
                     if (creep) {
                         const task = this.fork(

@@ -1,9 +1,9 @@
 import {mockGlobal, mockInstanceOf} from "screeps-jest"
+import {CreepRequest} from "../../../../src/creeps/creepConstants"
 import {CreepController} from "../../../../src/creeps/creepController"
 import {Kernel} from "../../../../src/os/Kernel"
 import {UpgraderRole} from "../../../../src/tasks/creeps/UpgraderRole"
 import {ControllerUpgrade} from "../../../../src/tasks/room/ControllerUpgrade"
-import CreepRequest = CreepController.CreepRequest
 
 let task: ControllerUpgrade
 let kernel: Kernel

@@ -1,8 +1,8 @@
-import {mockGlobal, mockInstanceOf } from "screeps-jest"
-import {CreepController} from "../../../..//src/creeps/creepController";
-import {Kernel} from "../../../..//src/os/Kernel";
-import {CreepTask} from "../../../..//src/tasks/creeps/CreepTask";
-import CreepRequest = CreepController.CreepRequest;
+import {mockGlobal, mockInstanceOf} from "screeps-jest"
+import {CreepController} from "../../../../src/creeps/creepController"
+import {Kernel} from "../../../../src/os/Kernel"
+import {CreepTask} from "../../../../src/tasks/creeps/CreepTask"
+import {createCreepRequest, CREEP_ROLE_PIONEER, CreepRequest} from "../../../../src/creeps/creepConstants"
 
 describe("With available creep", () => {
 
@@ -45,8 +45,8 @@ describe("With available creep", () => {
                 return false;
             }
 
-            creepRequest(): CreepController.CreepRequest | null {
-                return new CreepRequest([MOVE, WORK, CARRY], 5)
+            creepRequest(): CreepRequest | null {
+                return createCreepRequest(CREEP_ROLE_PIONEER, 5)
             }
         }
 
@@ -77,8 +77,8 @@ describe("With available creep", () => {
                 return true;
             }
 
-            creepRequest(): CreepController.CreepRequest | null {
-                return new CreepRequest([MOVE, WORK, CARRY], 5)
+            creepRequest(): CreepRequest | null {
+                return createCreepRequest(CREEP_ROLE_PIONEER, 5)
             }
         }
 
@@ -143,7 +143,7 @@ describe("Without creeps ingame", () => {
             return false;
         }
 
-        creepRequest(): CreepController.CreepRequest | null {
+        creepRequest(): CreepRequest | null {
             return null
         }
     }

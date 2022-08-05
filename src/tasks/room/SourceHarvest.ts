@@ -1,9 +1,9 @@
+import {createCreepRequest, CREEP_ROLE_HARVESTER} from "../../creeps/creepConstants"
 import {CreepController} from "../../creeps/creepController"
 import {TASK_CREEP_ROLE_HARVESTER, TASK_ROOM_SOURCE_HARVEST} from "../taskNames"
 import {PRIORITY_ROLE_HARVESTER} from "../taskPriorities"
 import {RoomTask} from "./RoomTask"
 import requestCreep = CreepController.requestCreep
-import CreepRequest = CreepController.CreepRequest
 
 const MAX_RESOURCE_PILE_WITHOUT_CONTAINER = 1500
 
@@ -40,7 +40,8 @@ export class SourceHarvest extends RoomTask {
         const taskId = "harvester-" + source.id
         const task = this.kernel.findTaskById(taskId)
         if (!task) {
-            const creep = requestCreep(new CreepRequest([WORK], this.priority, 4), taskId)
+            const creepRequest = createCreepRequest(CREEP_ROLE_HARVESTER, this.priority)
+            const creep = requestCreep(creepRequest, taskId)
             if (creep) {
                 this.fork(
                     TASK_CREEP_ROLE_HARVESTER,

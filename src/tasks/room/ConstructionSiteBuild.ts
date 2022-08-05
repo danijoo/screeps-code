@@ -1,9 +1,9 @@
+import {createCreepRequest, CREEP_ROLE_BUILDER} from "../../creeps/creepConstants"
 import {CreepController} from "../../creeps/creepController"
 import {Task} from "../../os/Task"
 import {TASK_CREEP_ROLE_BUILDER, TASK_ROOM_CONSTRUCTIONSITE_BUILD} from "../taskNames"
 import {PRIORITY_ROLE_BUILD} from "../taskPriorities"
 import {RoomTask} from "./RoomTask"
-import CreepRequest = CreepController.CreepRequest
 import requestCreep = CreepController.requestCreep
 
 const MAX_NUM_BUILDERS = 5
@@ -54,7 +54,7 @@ export class ConstructionSiteBuild extends RoomTask {
 
     createTaskForSite(taskId: string, site: ConstructionSite): Task | undefined {
         // Get a creep and create a new builder task wth it
-        const creepRequest = new CreepRequest([MOVE, WORK, CARRY], this.priority)
+        const creepRequest = createCreepRequest(CREEP_ROLE_BUILDER, this.priority)
         const creep = requestCreep(creepRequest, taskId)
         if (creep) {
             return this.fork(
