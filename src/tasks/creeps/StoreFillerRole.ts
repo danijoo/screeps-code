@@ -17,27 +17,28 @@ export class StoreFillerRole extends CreepTask {
         }
 
         // @ts-ignore
-        if (structure.store.getFreeCapacity(RESOURCE_ENERGY) === 0) {
+        let requiredEnergy = structure.store.getFreeCapacity(RESOURCE_ENERGY)
+        if (requiredEnergy === 0) {
             return true
-        }
-
-        if (creep.store[RESOURCE_ENERGY] !== creep.store.getCapacity()) {
-            this.forkAndSuspend(
-                TASK_CREEP_ACTION_GET_ENERGY,
-                "filler-getenergy-" + this.id.split("-").pop(),
-                this.priority,
-                { creepId: creep.id },
-                true)
         } else {
-            this.forkAndSuspend(
-                TASK_CREEP_ACTION_TRANSFER_ENERGY,
-                "filler-transfer-" + this.id.split("-").pop(),
-                this.priority,
-                { creepId: creep.id, structureId: structure.id },
-                true)
+            if (creep.store[RESOURCE_ENERGY] === creep.store.getCapacity() ||
+                creep.store[RESOURCE_ENERGY] >= requiredEnergy) {
+                this.forkAndSuspend(
+                    TASK_CREEP_ACTION_TRANSFER_ENERGY,
+                    "filler-transfer-" + this.id.split("-").pop(),
+                    this.priority,
+                    { creepId: creep.id, structureId: structure.id },
+                    true)
+            } else {
+                this.forkAndSuspend(
+                    TASK_CREEP_ACTION_GET_ENERGY,
+                    "filler-getenergy-" + this.id.split("-").pop(),
+                    this.priority,
+                    { creepId: creep.id },
+                    true)
+            }
+            return false
         }
-
-        return false
     }
 
 }

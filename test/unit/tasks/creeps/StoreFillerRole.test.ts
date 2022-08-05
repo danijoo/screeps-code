@@ -15,7 +15,7 @@ beforeEach(() => {
         id: "creepId",
         store: {
             [RESOURCE_ENERGY]: 0,
-            getCapacity: () => 300
+            getCapacity: () => 50
         },
         memory: {owner: "myid"},
         spawning: false
@@ -85,7 +85,21 @@ it("Should return when structure is full", () => {
 })
 
 it("Should create a filler action if creep is full", () => {
-    mockCreep.store[RESOURCE_ENERGY] = 300
+    mockCreep.store[RESOURCE_ENERGY] = 50
+    task.run()
+    expect(task.finished).not.toBeTruthy()
+    expect(task.suspended).toBeTruthy()
+    expect(kernel.taskTable.length).toBe(2)
+    const childTask = kernel.findTaskById("filler-transfer-myid")!
+    expect(childTask).toBeInstanceOf(TransferEnergy)
+    expect(childTask.parent).toBe(task)
+    expect(childTask.wakeParent).toBeTruthy()
+})
+
+it("Should create a filler action if creep capacity is above structure needs", () => {
+    mockCreep.store[RESOURCE_ENERGY] = 25
+    // @ts-ignore
+    mockStructure.store.getFreeCapacity = () => 20
     task.run()
     expect(task.finished).not.toBeTruthy()
     expect(task.suspended).toBeTruthy()
