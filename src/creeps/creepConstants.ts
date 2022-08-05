@@ -23,17 +23,17 @@ const REQUEST_TEMPLATES = {
     },
     [CREEP_ROLE_UPGRADER]: {
         template: [MOVE, WORK, CARRY],
-        maxNumExpand: Infinity,
+        maxNumExpand: 6,
         mustMatchExactly: false
     },
     [CREEP_ROLE_FILLER]: {
         template: [MOVE, CARRY, CARRY],
-        maxNumExpand: Infinity,
+        maxNumExpand: 6,
         mustMatchExactly: false
     },
     [CREEP_ROLE_BUILDER]: {
         template: [MOVE, WORK, CARRY],
-        maxNumExpand: Infinity,
+        maxNumExpand: 6,
         mustMatchExactly: false
     }
 }
