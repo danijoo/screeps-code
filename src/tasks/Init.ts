@@ -20,12 +20,6 @@ export class Init extends Task {
                 "roomctrl-" + room.name,
                 PRIORITY_ROOM_CONTROL,
                 {"roomName": room.name})
-            this.fork(
-                TASK_CREEP_CONTROL,
-                "creepctrl-" + room.name,
-                PRIORITY_CREEP_CONTROL,
-                {"roomName": room.name}
-            )
         }
 
         return true
