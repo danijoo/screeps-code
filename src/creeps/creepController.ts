@@ -30,7 +30,7 @@ export namespace CreepController {
     }
 
     export function requestCreep(request: CreepRequest, requesterName: string, build: boolean = true): Creep | null {
-        console.log(`Creep request from ${requesterName} received.`)
+        // console.log(`Creep request from ${requesterName} received.`)
         const matches: [Creep, creepMatch][] = ownedCreeps.filter(c => !c.spawning)
             .map(c => [c, matchCreepToRequest(c, request)])
 

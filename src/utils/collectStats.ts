@@ -8,9 +8,12 @@ declare global {
             roomStats: {[roomName: string]: {
                     energyAvailable: number
                     energyCapacityAvailable: number
+                    energyStored: number
                     controllerProgress: number
                     controllerProgressTotal: number
-                    controllerLevel: number
+                    controllerLevel: number,
+                    creepsTotal: number,
+                    creepsUsed: number,
                 }
             }
             gcl: {
@@ -30,16 +33,11 @@ declare global {
                 tasksAdded: number
                 tasksFinished: number
             }
-            creeps: {
-                count: number,
-                used: number
-            }
         }
     }
 }
 
 export function collectStats(kernel: Kernel) {
-    const creepCount = Object.keys(Game.creeps).length
     Memory.stats = {
         time: Game.time,
         roomStats: {},
@@ -60,10 +58,6 @@ export function collectStats(kernel: Kernel) {
             tasksAdded: kernel.tickTasksAdded,
             tasksFinished: kernel.tickTasksFinished
         },
-        creeps: {
-            count: creepCount,
-            used: creepCount - CreepController.getNumFreeCreeps()
-        },
     }
 
     for (const room of Object.values(Game.rooms)) {
@@ -72,9 +66,12 @@ export function collectStats(kernel: Kernel) {
         Memory.stats.roomStats[room.name] = {
             energyAvailable: room.energyAvailable,
             energyCapacityAvailable: room.energyCapacityAvailable,
+            energyStored: room.memory.energyStored,
             controllerProgress: room.controller!.progress,
             controllerProgressTotal: room.controller!.progressTotal,
-            controllerLevel: room.controller!.level
+            controllerLevel: room.controller!.level,
+            creepsTotal: room.find(FIND_MY_CREEPS).length,
+            creepsUsed: room.find(FIND_MY_CREEPS, {filter: c => !c.memory.owner || c.memory.owner === "CreepController"}).length
         }
     }
 }

@@ -31,6 +31,18 @@ export class RoomControl extends RoomTask {
                 break
         }
 
+        this.evalRoomStats(room)
+
         return true
+    }
+
+    evalRoomStats(room: Room) {
+        room.memory.energyStored = _.sum(room.find(FIND_STRUCTURES, {filter: s =>
+                s.structureType === STRUCTURE_CONTAINER || s.structureType === STRUCTURE_STORAGE
+            // @ts-ignore
+        }).map(s => s.store[RESOURCE_ENERGY]))
+        room.memory.energyStored += _.sum(room.find(FIND_DROPPED_RESOURCES, {filter: r => r.resourceType === RESOURCE_ENERGY})
+            .map(r => r.amount))
+
     }
 }

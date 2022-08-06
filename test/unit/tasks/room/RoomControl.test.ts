@@ -13,8 +13,12 @@ beforeEach(() => {
                 name: "roomId",
                 controller: mockInstanceOf<StructureController>({
                     level: 0
-                })
-            }
+                }),
+                memory: {
+                    energyStored: 0
+                },
+                find: () => []
+            },
         }
     }, true)
     kernel = new Kernel()
@@ -55,4 +59,17 @@ it("Should set room strategy to growing at rcl > 1", () => {
     expect(task.finished).toBeTruthy()
     expect(kernel.taskTable.length).toBe(1)
     expect(kernel.taskTable.nextByPriority()).toBeInstanceOf(GrowingRoomStrategy)
+})
+
+it("Should update room stats", () => {
+    Game.rooms.roomId.find = jest.fn()
+        .mockReturnValueOnce([
+            mockInstanceOf<StructureStorage>({store: {[RESOURCE_ENERGY]: 100}}),
+            mockInstanceOf<StructureContainer>({store: {[RESOURCE_ENERGY]: 100}}),
+        ])
+        .mockReturnValueOnce([
+            mockInstanceOf<Resource>({amount: 100})
+        ])
+    task.run()
+    expect(Game.rooms.roomId.memory.energyStored).toBe(300)
 })

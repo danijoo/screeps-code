@@ -23,7 +23,8 @@ declare global {
                 harvesterPosition: [number, number],
             }
         }
-        constructionQueue: ConstructionRequest[]
+        constructionQueue: ConstructionRequest[],
+        energyStored: number
     }
 }
 
