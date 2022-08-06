@@ -5,7 +5,7 @@ import {PRIORITY_ROLE_HARVESTER} from "../taskPriorities"
 import {RoomTask} from "./RoomTask"
 import requestCreep = CreepController.requestCreep
 
-const MAX_RESOURCE_PILE_WITHOUT_CONTAINER = 1500
+const MAX_RESOURCE_PILE_WITHOUT_CONTAINER = 5000
 
 export class SourceHarvest extends RoomTask {
     readonly type: string = TASK_ROOM_SOURCE_HARVEST
@@ -34,14 +34,14 @@ export class SourceHarvest extends RoomTask {
 
     shouldSkipSource(room: Room, source: Source): boolean {
         const harvesterPosition = room.getPositionAt(...room.memory.sources[source.id].harvesterPosition)
-        let amount: number
+
         const container = harvesterPosition?.lookFor(LOOK_STRUCTURES).filter(s => s.structureType === STRUCTURE_CONTAINER).pop()
-        if (container) {
-            amount = (container as StructureContainer).store.getUsedCapacity(RESOURCE_ENERGY)
-        } else {
-            amount = harvesterPosition?.lookFor(LOOK_RESOURCES).pop()?.amount ?? 0
+        if (container && (container as StructureContainer).store.getFreeCapacity() === 0) {
+            return true
         }
-        return amount > MAX_RESOURCE_PILE_WITHOUT_CONTAINER
+
+        return (harvesterPosition?.lookFor(LOOK_RESOURCES)
+            .filter(r => r.resourceType === RESOURCE_ENERGY).pop()?.amount ?? 0) > MAX_RESOURCE_PILE_WITHOUT_CONTAINER
     }
 
     spawnTaskForSource(room: Room, source: Source): void {
