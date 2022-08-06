@@ -100,23 +100,49 @@ it("Should not spawn harvester tasks for ignored sources", () => {
 })
 
 it("Should not spawn harvester tasks for resources with a huge energy pile", () => {
-    mockHarvestPosition.lookFor = () => {
-        return [mockInstanceOf<Resource>({
-            resourceType: RESOURCE_ENERGY,
-            amount: 9999999999
-        })]
+    // @ts-ignore
+    mockHarvestPosition.lookFor = (type: string) => {
+        if (type === LOOK_RESOURCES)
+            return [mockInstanceOf<Resource>({
+                resourceType: RESOURCE_ENERGY,
+                amount: 9999999999
+            })]
+        else
+            return []
     }
     task.run()
     expect(task.finished).toBeTruthy()
     expect(kernel.taskTable.length).toBe(0)
 })
 
+it("Should kill harvester tasks for resources with a huge energy pile", () => {
+    // @ts-ignore
+    mockHarvestPosition.lookFor = (type: string) => {
+        if (type === LOOK_RESOURCES)
+            return [mockInstanceOf<Resource>({
+                resourceType: RESOURCE_ENERGY,
+                amount: 9999999999
+            })]
+        else
+            return []
+    }
+    kernel.kill = jest.fn()
+    kernel.findTaskById = jest.fn().mockReturnValue(mockInstanceOf<SourceHarvest>())
+    task.run()
+    expect(task.finished).toBeTruthy()
+    expect(kernel.kill).toHaveBeenCalled()
+})
+
 it("Should spawn harvester tasks for resources with a small energy pile", () => {
-    mockHarvestPosition.lookFor = () => {
-        return [mockInstanceOf<Resource>({
-            resourceType: RESOURCE_ENERGY,
-            amount: 1000
-        })]
+    // @ts-ignore
+    mockHarvestPosition.lookFor = (type: string) => {
+        if (type === LOOK_RESOURCES)
+            return [mockInstanceOf<Resource>({
+                resourceType: RESOURCE_ENERGY,
+                amount: 1000
+            })]
+        else
+            return []
     }
     task.run()
     expect(task.finished).toBeTruthy()

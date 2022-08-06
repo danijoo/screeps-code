@@ -21,8 +21,11 @@ export class SourceHarvest extends RoomTask {
         }
 
         for (const source of sources) {
+            // only mine resources if storage/resource pile allows for more resources
             if (!this.shouldSkipSource(room, source)) {
                 this.spawnTaskForSource(room, source)
+            } else {
+                this.killTaskForSource(source)
             }
         }
 
@@ -31,13 +34,18 @@ export class SourceHarvest extends RoomTask {
 
     shouldSkipSource(room: Room, source: Source): boolean {
         const harvesterPosition = room.getPositionAt(...room.memory.sources[source.id].harvesterPosition)
-        const resources = harvesterPosition?.lookFor(LOOK_RESOURCES) ?? []
-        return resources.length > 0 && resources[0].resourceType === RESOURCE_ENERGY
-            && resources[0].amount > MAX_RESOURCE_PILE_WITHOUT_CONTAINER
+        let amount: number
+        const container = harvesterPosition?.lookFor(LOOK_STRUCTURES).filter(s => s.structureType === STRUCTURE_CONTAINER).pop()
+        if (container) {
+            amount = (container as StructureContainer).store.getUsedCapacity(RESOURCE_ENERGY)
+        } else {
+            amount = harvesterPosition?.lookFor(LOOK_RESOURCES).pop()?.amount ?? 0
+        }
+        return amount > MAX_RESOURCE_PILE_WITHOUT_CONTAINER
     }
 
     spawnTaskForSource(room: Room, source: Source): void {
-        const taskId = "harvester-" + source.id
+        const taskId = this.getTaskIdForSource(source)
         const task = this.kernel.findTaskById(taskId)
         if (!task) {
             const creepRequest = createCreepRequest(CREEP_ROLE_HARVESTER, this.priority)
@@ -55,6 +63,16 @@ export class SourceHarvest extends RoomTask {
                 )
             }
         }
+    }
+
+    killTaskForSource(source: Source): void {
+        const harvesterTask = this.kernel.findTaskById(this.getTaskIdForSource(source))
+        if (harvesterTask)
+            this.kernel.kill(harvesterTask)
+    }
+
+    getTaskIdForSource(source: Source): string {
+        return "harvester-" + source.id
     }
 
 }
