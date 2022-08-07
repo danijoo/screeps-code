@@ -5,9 +5,10 @@ import {TASK_CREEP_ROLE_BUILDER, TASK_ROOM_CONSTRUCTIONSITE_BUILD} from "../task
 import {PRIORITY_ROLE_BUILD} from "../taskPriorities"
 import {RoomTask} from "./RoomTask"
 import requestCreep = CreepController.requestCreep
+import returnCreep = CreepController.returnCreep
 
-const MAX_NUM_BUILDERS = 5
-const MAX_NUM_BUILDERS_PER_SITE = 2
+export const MAX_NUM_BUILDERS = 3
+export const MAX_NUM_BUILDERS_PER_SITE = 1
 
 export class ConstructionSiteBuild extends RoomTask {
     readonly type: string = TASK_ROOM_CONSTRUCTIONSITE_BUILD
@@ -57,11 +58,13 @@ export class ConstructionSiteBuild extends RoomTask {
         const creepRequest = createCreepRequest(CREEP_ROLE_BUILDER, this.priority)
         const creep = requestCreep(creepRequest, taskId)
         if (creep) {
-            return this.fork(
+            let task = this.fork(
                 TASK_CREEP_ROLE_BUILDER,
                 taskId,
                 PRIORITY_ROLE_BUILD,
                 {constructionSiteId: site.id, creepId: creep.id})
+            if (!task)
+                returnCreep(creep)
         }
         return undefined
     }

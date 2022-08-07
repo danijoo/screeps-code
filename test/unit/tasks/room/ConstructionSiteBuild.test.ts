@@ -1,96 +1,50 @@
 import {mockGlobal, mockInstanceOf} from "screeps-jest"
 import {CreepController} from "../../../../src/creeps/creepController"
 import {Kernel} from "../../../../src/os/Kernel"
-import {ConstructionSiteBuild} from "../../../../src/tasks/room/ConstructionSiteBuild"
+import {ConstructionSiteBuild, MAX_NUM_BUILDERS} from "../../../../src/tasks/room/ConstructionSiteBuild"
 
 let task: ConstructionSiteBuild
 let kernel: Kernel
-let mockCreeps: {[key: string]: Creep}
+let mockCreeps: Creep[]
 beforeEach(() => {
-    mockCreeps = {
-        "one": mockInstanceOf<Creep>({
-            id: "one",
+    const mockRoom = mockInstanceOf<Room>({
+        name: "roomName",
+        find: () => [mockInstanceOf<ConstructionSite>({
+            id: "mysiteid"
+        })],
+        energyCapacityAvailable: 300,
+        energyAvailable: 300
+    })
+
+    mockCreeps = []
+    for (let i=0; i<6; i++) {
+        mockCreeps.push(mockInstanceOf<Creep>({
+            id: String(i),
             spawning: false,
             memory: {
                 owner: undefined,
             },
             getActiveBodyparts: () => 2,
-            room: {
-                energyCapacityAvailable: 300
-            }
-        }),
-        "two": mockInstanceOf<Creep>({
-            id: "two",
-            spawning: false,
-            memory: {
-                owner: undefined,
-            },
-            getActiveBodyparts: () => 2,
-            room: {
-                energyCapacityAvailable: 300
-            }
-        }),
-        "three": mockInstanceOf<Creep>({
-            id: "three",
-            spawning: false,
-            memory: {
-                owner: undefined,
-            },
-            getActiveBodyparts: () => 2,
-            room: {
-                energyCapacityAvailable: 300
-            }
-        }),
-        "four": mockInstanceOf<Creep>({
-            id: "four",
-            spawning: false,
-            memory: {
-                owner: undefined,
-            },
-            getActiveBodyparts: () => 2,
-            room: {
-                energyCapacityAvailable: 300
-            }
-        }),
-        "five": mockInstanceOf<Creep>({
-            id: "five",
-            spawning: false,
-            memory: {
-                owner: undefined,
-            },
-            getActiveBodyparts: () => 2,
-            room: {
-                energyCapacityAvailable: 300
-            }
-        }),
-        "six": mockInstanceOf<Creep>({
-            id: "six",
-            spawning: false,
-            memory: {
-                owner: undefined,
-            },
-            getActiveBodyparts: () => 2,
-            room: {
-                energyCapacityAvailable: 300
-            }
-        }),
+            room: mockRoom
+        }))
     }
+
     mockGlobal<Game>("Game", {
         rooms: {
-            roomName: {
-                find: () => [mockInstanceOf<ConstructionSite>({
-                    id: "mysiteid"
-                })]
-            }
+            [mockRoom.name]: mockRoom
         },
-        creeps: mockCreeps,
+        creeps: {
+            "0": mockCreeps[0],
+            "1": mockCreeps[1],
+            "2": mockCreeps[2],
+            "3": mockCreeps[3],
+            "4": mockCreeps[4],
+            "5": mockCreeps[5],
+        },
         spawns: {
             "Spawn1": mockInstanceOf<StructureSpawn>({
                 spawning: () => false,
-                room: {
-                    energyCapacityAvailable: 300,
-                    energyAvailable: 300
-                }
+                room: mockRoom
             })
         }
     })
@@ -107,23 +61,23 @@ beforeEach(() => {
 
 it ("Should spawn builder tasks for a construction site", () => {
     task.run()
-    expect(kernel.taskTable.length).toBe(2)
+    expect(kernel.taskTable.length).toBeGreaterThan(0)
 })
 
-it ("Should not exceed max number of builders", () => {
-    Game.rooms.roomName.find = () => [
-        mockInstanceOf<ConstructionSite>({
-            id: "mysiteid"
-        }),
-        mockInstanceOf<ConstructionSite>({
-            id: "mysiteid2"
-        }),
-        mockInstanceOf<ConstructionSite>({
-            id: "mysiteid3"
-        })
-    ]
+it ("Should never exceed max number of builders", () => {
+    Game.rooms.roomName.find = () => {
+        let sites = []
+        for (let i = 0; i < 10; i++) {
+            sites.push(
+                mockInstanceOf<ConstructionSite>({
+                    id: "mysiteid" + i
+                }),
+            )
+        }
+        return sites
+    }
     task.run()
-    expect(kernel.taskTable.length).toBe(5)
+    expect(kernel.taskTable.length).not.toBeGreaterThan(MAX_NUM_BUILDERS)
 })
 
 it ("Should finish if no creep is available", () => {
@@ -131,4 +85,12 @@ it ("Should finish if no creep is available", () => {
     CreepController.init()
     task.run()
     expect(kernel.taskTable.length).toBe(0)
+})
+
+it ("Should return creep if task spawning failed", () => {
+    kernel.createTaskIfNotExists = jest.fn().mockReturnValue(undefined)
+    const creepsAvailable = CreepController.getNumFreeCreeps()
+    task.run()
+    expect(kernel.createTaskIfNotExists).toBeCalled()
+    expect(CreepController.getNumFreeCreeps()).toBe(creepsAvailable)
 })
