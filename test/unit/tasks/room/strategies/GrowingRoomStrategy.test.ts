@@ -3,7 +3,7 @@ import {Kernel} from "../../../../../src/os/Kernel"
 import {Construction} from "../../../../../src/tasks/room/Construction"
 import {ControllerUpgrade} from "../../../../../src/tasks/room/ControllerUpgrade"
 import {SourceHarvest} from "../../../../../src/tasks/room/SourceHarvest"
-import {Storage} from "../../../../../src/tasks/room/Storage"
+import {SpawnFill} from "../../../../../src/tasks/room/SpawnFill"
 import {GrowingRoomStrategy} from "../../../../../src/tasks/room/strategies/GrowingRoomStrategy"
 import {TowerControl} from "../../../../../src/tasks/room/TowerControl"
 
@@ -56,7 +56,7 @@ it("Should start a storage filler task", () => {
     task.run()
     expect(task.finished).toBeTruthy()
     const childTask = kernel.findTaskById("strgeFiller")
-    expect(childTask).toBeInstanceOf(Storage)
+    expect(childTask).toBeInstanceOf(SpawnFill)
 })
 
 it("Should start a tower control task at rcl >= 3", () => {

@@ -5,7 +5,7 @@ import {
 } from "../taskNames";
 import {CreepTask} from "./CreepTask";
 
-export class StoreFillerRole extends CreepTask {
+export class SpawnFillerRole extends CreepTask {
     type = TASK_CREEP_ROLE_FILLER
 
     _runWithCreep(creep: Creep): boolean {

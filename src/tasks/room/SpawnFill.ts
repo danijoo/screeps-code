@@ -7,9 +7,9 @@ import {RoomTask} from "./RoomTask"
 import requestCreep = CreepController.requestCreep;
 
 const MAX_NUM_FILLER = 3
-const MAX_NUM_FILLER_PER_STRUCTURE = 3
+const MAX_NUM_FILLER_PER_STRUCTURE = 1
 
-export class Storage extends RoomTask {
+export class SpawnFill extends RoomTask {
     type = TASK_ROOM_STORAGE
 
     runWithRoom(room: Room): boolean {

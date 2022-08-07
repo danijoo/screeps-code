@@ -3,11 +3,11 @@ import {CreepController} from "../../../../src/creeps/creepController";
 import {Kernel} from "../../../../src/os/Kernel";
 import {GetEnergy} from "../../../../src/tasks/creeps/actions/GetEnergy"
 import {TransferEnergy} from "../../../../src/tasks/creeps/actions/TransferEnergy";
-import {StoreFillerRole} from "../../../../src/tasks/creeps/StoreFillerRole";
+import {SpawnFillerRole} from "../../../../src/tasks/creeps/SpawnFillerRole";
 
 let mockCreep: Creep
 let mockStructure: StructureSpawn
-let task: StoreFillerRole
+let task: SpawnFillerRole
 let kernel: Kernel
 const mockSource: Source = mockInstanceOf<Source>({id: "sourceId", energy: 100})
 beforeEach(() => {
@@ -48,7 +48,7 @@ beforeEach(() => {
         }
     })
     kernel = new Kernel()
-    task = new StoreFillerRole(
+    task = new SpawnFillerRole(
         "myid",
         null,
         0,
