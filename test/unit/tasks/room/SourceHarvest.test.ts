@@ -148,3 +148,40 @@ it("Should spawn harvester tasks for resources with a small energy pile", () => 
     expect(task.finished).toBeTruthy()
     expect(kernel.taskTable.length).toBe(1)
 })
+
+it("Should issue a container build request if no container is present", () => {
+    task.ipcSend = jest.fn()
+    task.run()
+    expect(task.ipcSend).toBeCalled()
+})
+
+it("Should not issue a container build request if container is present", () => {
+    mockHarvestPosition.lookFor = (type: string) => {
+        if (type === LOOK_STRUCTURES)
+            return [mockInstanceOf<StructureContainer>({
+                structureType: STRUCTURE_CONTAINER,
+                store: {
+                    getFreeCapacity: () => 10000
+                }
+            })]
+        else
+            return []
+    }
+    task.ipcSend = jest.fn()
+    task.run()
+    expect(task.ipcSend).not.toBeCalled()
+})
+
+it("Should not issue a container build request if construction site is present", () => {
+    mockHarvestPosition.lookFor = (type: string) => {
+        if (type === LOOK_CONSTRUCTION_SITES)
+            return [mockInstanceOf<ConstructionSite>({
+                structureType: STRUCTURE_CONTAINER,
+            })]
+        else
+            return []
+    }
+    task.ipcSend = jest.fn()
+    task.run()
+    expect(task.ipcSend).not.toBeCalled()
+})

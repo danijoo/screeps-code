@@ -51,8 +51,11 @@ export class Construction extends RoomTask {
     }
 
     addToQueue(request: ConstructionRequest) {
-        if (!this.room)
+        this.room = Game.rooms[this.data.roomName]
+        if (!this.room) {
+            console.log("Failed to add construction site to queue: room not found")
             return
+        }
         for (let i = 0; i < this.room?.memory.constructionQueue.length; i++) {
             if (this.room.memory.constructionQueue[i].priority < request.priority) {
                 this.room.memory.constructionQueue.splice(i, 0, request)

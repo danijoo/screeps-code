@@ -2,6 +2,7 @@ import {createCreepRequest, CREEP_ROLE_HARVESTER} from "../../creeps/creepConsta
 import {CreepController} from "../../creeps/creepController"
 import {TASK_CREEP_ROLE_HARVESTER, TASK_ROOM_SOURCE_HARVEST} from "../taskNames"
 import {PRIORITY_ROLE_HARVESTER} from "../taskPriorities"
+import {ConstructionRequest} from "./Construction"
 import {RoomTask} from "./RoomTask"
 import requestCreep = CreepController.requestCreep
 
@@ -23,6 +24,7 @@ export class SourceHarvest extends RoomTask {
         for (const source of sources) {
             // only mine resources if storage/resource pile allows for more resources
             if (!this.shouldSkipSource(room, source)) {
+                this.buildContainer(room, source)
                 this.spawnTaskForSource(room, source)
             } else {
                 this.killTaskForSource(source)
@@ -73,6 +75,22 @@ export class SourceHarvest extends RoomTask {
 
     getTaskIdForSource(source: Source): string {
         return "harvester-" + source.id
+    }
+
+    buildContainer(room: Room, source: Source): void {
+        const harvesterPosition = room.getPositionAt(...room.memory.sources[source.id].harvesterPosition)
+        const container = harvesterPosition?.lookFor(LOOK_STRUCTURES)
+            .filter(s => s.structureType === STRUCTURE_CONTAINER).length
+        const constructionSite = harvesterPosition?.lookFor(LOOK_CONSTRUCTION_SITES)
+            .filter(s => s.structureType === STRUCTURE_CONTAINER).length
+        if (container === 0 && constructionSite === 0) {
+            const buildReq = new ConstructionRequest(
+                room.memory.sources[source.id].harvesterPosition,
+                STRUCTURE_CONTAINER,
+                this.priority
+            )
+            this.ipcSend("construct", buildReq)
+        }
     }
 
 }
