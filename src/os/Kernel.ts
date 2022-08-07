@@ -174,14 +174,13 @@ export class Kernel {
     }
 
     report(): void {
-        console.log("Task Report:")
-        const header = `| Task${" ".repeat(60)} | Parent${" ".repeat(58)} | Prio. | Exec. | Suspended | Finished |`
+        const header = `| Task${" ".repeat(92)} | Parent${" ".repeat(90)} | Prio. | Exec. | Suspended | Finished |`
         console.log("-".repeat(header.length))
         console.log(header)
         console.log("-".repeat(header.length))
         this.executedTasks.sort((a,b) => b.priority - a.priority).forEach(t => {
             const parentName = t.parent?.getName() ?? ""
-            console.log(`| ${t.getName().padEnd(64, " ")} | ${parentName.padEnd(64, " ")} | `
+            console.log(`| ${t.getName().padEnd(96, " ")} | ${parentName.padEnd(96, " ")} | `
                 + `${t.priority.toString().padEnd(5, " ")} | ${t.executed.toString().padEnd(5, " ")} | `
                 + `${t.suspended.toString().padEnd(9, " ")} | ${t.finished.toString().padEnd(8, " ")} |`)
         })

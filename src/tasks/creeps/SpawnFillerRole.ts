@@ -25,14 +25,14 @@ export class SpawnFillerRole extends CreepTask {
                 creep.store[RESOURCE_ENERGY] >= requiredEnergy) {
                 this.forkAndSuspend(
                     TASK_CREEP_ACTION_TRANSFER_ENERGY,
-                    "filler-transfer-" + this.id.split("-").pop(),
+                    this.id + "-transfer",
                     this.priority,
                     { creepId: creep.id, structureId: structure.id },
                     true)
             } else {
                 this.forkAndSuspend(
                     TASK_CREEP_ACTION_GET_ENERGY,
-                    "filler-getenergy-" + this.id.split("-").pop(),
+                    this.id + "-getenergy",
                     this.priority,
                     { creepId: creep.id },
                     true)

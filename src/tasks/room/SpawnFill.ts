@@ -32,18 +32,19 @@ export class SpawnFill extends RoomTask {
                 }
                 return structToNum(b) - structToNum(a)
             })
-
         // already running filler tasks
         const runningFillerTasks: Task[] = this.kernel.findTasksByPrefix("filler-")
         let numExtensionFillerTasks = runningFillerTasks.filter(t => t.id.includes("ext")).length
 
-            // Loop over structures and for each structure, check the number of running filler tasks
+
+        // Loop over structures and for each structure, check the number of running filler tasks
         // Spawn new filler tasks until the max number of tasks for this structure is reached
         // BReak the loop if the global maximum of tasks is exceeded
         structloop: for (const struct of storageStructures) {
             if (struct.structureType === STRUCTURE_EXTENSION
-                && numExtensionFillerTasks >= MAX_NUM_FILLER_FOR_EXTENSIONS)
+                && numExtensionFillerTasks >= MAX_NUM_FILLER_FOR_EXTENSIONS) {
                 continue
+            }
             let numTasksForStruct = runningFillerTasks.filter(task => task.id.includes(struct.id)).length
             for (let i = numTasksForStruct; i < MAX_NUM_FILLER_PER_STRUCTURE; i++) {
 
