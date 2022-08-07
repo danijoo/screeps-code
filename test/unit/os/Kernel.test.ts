@@ -1,8 +1,8 @@
-import { mockGlobal } from "screeps-jest";
-import {Kernel} from "../../..//src/os/Kernel";
-import {Task} from "../../..//src/os/Task";
-import {taskMap} from "../../..//src/tasks/taskMap";
-import {uuid} from "../../..//src/utils/uuid";
+import {mockGlobal, mockInstanceOf} from "screeps-jest"
+import {Kernel} from "../../../src/os/Kernel";
+import {Task} from "../../../src/os/Task";
+import {taskMap} from "../../../src/tasks/taskMap";
+import {uuid} from "../../../src/utils/uuid";
 
 class TestTaskFinishes extends Task {
     type = "TestTaskFinishes"
@@ -214,5 +214,16 @@ describe("Kernel with added tasks", () => {
         expect(childTask.executed).toBeTruthy()
         expect(parentTask.executed).toBeTruthy()
         expect(parentTask.suspended).not.toBeTruthy()
+    })
+
+    it ("Should return tasks by prefix", () => {
+        for (let i = 0; i < 10; i++) {
+            kernel.addTaskIfNotExists(mockInstanceOf<Task>({id: "test-" + i}))
+        }
+        for (let i = 0; i < 20; i++) {
+            kernel.addTaskIfNotExists(mockInstanceOf<Task>({id: "foo-" + i}))
+        }
+        let prefixedTasksLen = kernel.findTasksByPrefix("test-").length
+        expect(prefixedTasksLen).toBe(10)
     })
 })

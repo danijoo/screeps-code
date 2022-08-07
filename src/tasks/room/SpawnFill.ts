@@ -6,20 +6,20 @@ import {PRIORITY_ROLE_FILLER} from "../taskPriorities"
 import {RoomTask} from "./RoomTask"
 import requestCreep = CreepController.requestCreep;
 
-const MAX_NUM_FILLER = 3
-const MAX_NUM_FILLER_PER_STRUCTURE = 1
+export const MAX_NUM_FILLER = 3
+export const MAX_NUM_FILLER_PER_STRUCTURE = 1
 
 export class SpawnFill extends RoomTask {
     type = TASK_ROOM_STORAGE
 
     runWithRoom(room: Room): boolean {
         // get list of unfilled spawns, extensions and towers
-        const storageStructures: Structure[] = room.find<StructureSpawn>(FIND_MY_STRUCTURES,
+        let storageStructures: Structure[] = room.find<StructureSpawn | StructureExtension | StructureTower>(FIND_MY_STRUCTURES,
             {filter: s => {
                return s.structureType === STRUCTURE_SPAWN
                 || s.structureType === STRUCTURE_EXTENSION
                 || s.structureType === STRUCTURE_TOWER}
-            }).filter(spawn => spawn.store[RESOURCE_ENERGY] !== spawn.store.getCapacity(RESOURCE_ENERGY))
+            }).filter(s => s.store.getFreeCapacity(RESOURCE_ENERGY) > 0)
             .sort((a, b) => {
                 function structToNum(s: Structure): number {
                     if (s.structureType === STRUCTURE_SPAWN)
@@ -32,41 +32,23 @@ export class SpawnFill extends RoomTask {
             })
 
         // already running filler tasks
-        const runningFillerTasks: Task[] = _.range(0, MAX_NUM_FILLER)
-            .map(i => this.kernel.findTaskById(this.getFillerTaskId(i)))
-            .filter(t => t !== undefined)
-            .map(t => t as Task)
+        const runningFillerTasks: Task[] = this.kernel.findTasksByPrefix("filler-")
 
-        for (const spawn of storageStructures) {
-            // @ts-ignore
-            if (spawn.store[RESOURCE_ENERGY] !== spawn.store.getCapacity()) {
-                for (let i = 0; i < MAX_NUM_FILLER; i++) {
-                    const taskId = this.getFillerTaskId(i)
-                    // check if there is already a running filler task with this id
-                    // because the taskIds are unique, this take care MAX_NUM_FILLER is not exceeded
-                    if (runningFillerTasks.filter(t => t.id === taskId).length > 0) {
-                        continue
-                    }
+        // Loop over structures and for each structure, check the number of running filler tasks
+        // Spawn new filler tasks until the max number of tasks for this structure is reached
+        // BReak the loop if the global maximum of tasks is exceeded
+        structloop: for (const struct of storageStructures) {
+            let numTasksForStruct = runningFillerTasks.filter(task => task.id.includes(struct.id)).length
+            for (let i = numTasksForStruct; i < MAX_NUM_FILLER_PER_STRUCTURE; i++) {
 
-                    // Check max number of tasks for this single structure is also not exceeded
-                    if (runningFillerTasks.filter(t => t.data?.structureId ?? null === spawn.id).length
-                        >= MAX_NUM_FILLER_PER_STRUCTURE) {
-                        break
-                    }
+                // never spawn more tasks than global max
+                if (runningFillerTasks.length >= MAX_NUM_FILLER) {
+                    break structloop
+                }
 
-                    // Get a creep and create a new filler task wth it
-                    const creepRequest = createCreepRequest(CREEP_ROLE_FILLER, this.priority)
-                    const creep = requestCreep(creepRequest, taskId)
-                    if (creep) {
-                        const task = this.fork(
-                            TASK_CREEP_ROLE_FILLER,
-                            this.getFillerTaskId(i),
-                            PRIORITY_ROLE_FILLER,
-                            {structureId: spawn.id, creepId: creep.id})
-                        if (task) {
-                            runningFillerTasks.push(task)
-                        }
-                    }
+                const task = this.spawnFillerTask(struct.id, i)
+                if (task) {
+                    runningFillerTasks.push(task)
                 }
             }
         }
@@ -74,7 +56,22 @@ export class SpawnFill extends RoomTask {
         return true
     }
 
-    getFillerTaskId(counter: number): string {
-        return "filler-" + counter
+    spawnFillerTask(structureId: Id<Structure>, postfix: any): Task | undefined {
+        const taskId = this.getFillerTaskId(structureId, postfix)
+        // Get a creep and create a new filler task wth it
+        const creepRequest = createCreepRequest(CREEP_ROLE_FILLER, this.priority)
+        const creep = requestCreep(creepRequest, taskId)
+        if (creep) {
+            return this.fork(
+                TASK_CREEP_ROLE_FILLER,
+                taskId,
+                PRIORITY_ROLE_FILLER,
+                {structureId: structureId, creepId: creep.id})
+        }
+        return undefined
+    }
+
+    getFillerTaskId(structureId: Id<Structure>, postfix: any): string {
+        return `filler-${structureId}-${postfix}`
     }
 }

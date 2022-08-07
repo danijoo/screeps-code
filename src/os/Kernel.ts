@@ -169,6 +169,10 @@ export class Kernel {
         return this.taskTable.get(id)
     }
 
+    findTasksByPrefix(prefix: string): Task[] {
+        return Array.from(this.taskTable.items.values()).filter(t => t.id.startsWith(prefix))
+    }
+
     report(): void {
         console.log("Task Report:")
         const header = `| Task${" ".repeat(60)} | Parent${" ".repeat(58)} | Prio. | Exec. | Suspended | Finished |`
