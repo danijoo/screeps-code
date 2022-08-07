@@ -84,18 +84,21 @@ it ("should spawn at least one filler task if there is an unfilled extension", (
     mockExtensions[0].store.getFreeCapacity = jest.fn().mockReturnValue(10)
     task.run()
     expect(task.kernel.taskTable.length).toBeGreaterThan(0)
+    expect(task.kernel.taskTable.nextByPriority()!.id).toContain("ext")
 })
 
 it ("should spawn at least one filler task if there is an unfilled spawn", () => {
     mockSpawns[0].store.getFreeCapacity = jest.fn().mockReturnValue(10)
     task.run()
     expect(task.kernel.taskTable.length).toBeGreaterThan(0)
+    expect(task.kernel.taskTable.nextByPriority()!.id).toContain("spa")
 })
 
 it ("should spawn at least one filler task if there is an unfilled tower", () => {
     mockTower.store.getFreeCapacity = jest.fn().mockReturnValue(10)
     task.run()
     expect(task.kernel.taskTable.length).toBeGreaterThan(0)
+    expect(task.kernel.taskTable.nextByPriority()!.id).toContain("tow")
 })
 
 it ("should not spawn a filler task if there are no available creeps", () => {
@@ -122,6 +125,8 @@ it ("should never spawn more filler tasks than max number", () => {
     expect(task.kernel.taskTable.length).toBe(MAX_NUM_FILLER)
 })
 
-
-
-it.todo("should spawn only one task to fill extensions")
+it ("should spawn only one task for extensions", () => {
+    mockExtensions.forEach(s => s.store.getFreeCapacity = jest.fn().mockReturnValue(1000))
+    task.run()
+    expect(task.kernel.taskTable.length).toBe(1)
+})
