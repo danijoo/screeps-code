@@ -106,11 +106,22 @@ it ("should not spawn a filler task if there are no available creeps", () => {
     expect(task.kernel.taskTable.length).toBe(0)
 })
 
-it ("It should never spawn more filler tasks than max number", () => {
+it ("should return a creep if task could not be spawnd", () => {
+    const numCreeps = CreepController.getNumFreeCreeps()
+    mockSpawns[0].store.getFreeCapacity = jest.fn().mockReturnValue(10)
+    task.kernel.createTaskIfNotExists = jest.fn().mockReturnValue(undefined)
+    task.run()
+    expect(task.kernel.taskTable.length).toBe(0)
+    expect(CreepController.getNumFreeCreeps()).toBe(numCreeps)
+})
+
+it ("should never spawn more filler tasks than max number", () => {
     mockSpawns.forEach(s => s.store.getFreeCapacity = jest.fn().mockReturnValue(1000))
     mockExtensions.forEach(s => s.store.getFreeCapacity = jest.fn().mockReturnValue(1000))
     task.run()
     expect(task.kernel.taskTable.length).toBe(MAX_NUM_FILLER)
 })
 
-it.todo ("Number of spawned filler tasks should depend on creep carry capacity")
+
+
+it.todo("should spawn only one task to fill extensions")

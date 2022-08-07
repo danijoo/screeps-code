@@ -5,6 +5,7 @@ import {TASK_CREEP_ROLE_FILLER, TASK_ROOM_STORAGE} from "../taskNames";
 import {PRIORITY_ROLE_FILLER} from "../taskPriorities"
 import {RoomTask} from "./RoomTask"
 import requestCreep = CreepController.requestCreep;
+import returnCreep = CreepController.returnCreep
 
 export const MAX_NUM_FILLER = 3
 export const MAX_NUM_FILLER_PER_STRUCTURE = 1
@@ -62,11 +63,15 @@ export class SpawnFill extends RoomTask {
         const creepRequest = createCreepRequest(CREEP_ROLE_FILLER, this.priority)
         const creep = requestCreep(creepRequest, taskId)
         if (creep) {
-            return this.fork(
+            const task = this.fork(
                 TASK_CREEP_ROLE_FILLER,
                 taskId,
                 PRIORITY_ROLE_FILLER,
                 {structureId: structureId, creepId: creep.id})
+            if (task)
+                return task
+            else
+                returnCreep(creep)
         }
         return undefined
     }
